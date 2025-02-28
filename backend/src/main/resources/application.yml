@@ -1,0 +1,24 @@
+server:
+  servlet:
+    context-path: /petsalus/api
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/petsalus
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+jwt:
+  secret:
+  expirationMs:   
+  jwtCookieName: 
