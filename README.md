@@ -62,15 +62,7 @@ O **PetSalus** é uma plataforma inovadora que combina funcionalidades de **agen
    npx react-native run-android  # Para Android
    npx react-native run-ios  # Para iOS
    ```
-
-## Contribuição
-Contribuições são bem-vindas! Para colaborar:
-1. Fork o repositório.
-2. Crie uma branch para sua feature (`git checkout -b minha-feature`).
-3. Commit suas alterações (`git commit -m 'Minha nova feature'`).
-4. Envie para o repositório (`git push origin minha-feature`).
-5. Abra um Pull Request.
-
+   
 ## Licença
 Este projeto está sob a licença MIT - consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 
