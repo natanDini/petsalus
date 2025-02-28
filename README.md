@@ -62,7 +62,3 @@ O **PetSalus** é uma plataforma inovadora que combina funcionalidades de **agen
    npx react-native run-android  # Para Android
    npx react-native run-ios  # Para iOS
    ```
-   
-## Licença
-Este projeto está sob a licença MIT - consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
-
