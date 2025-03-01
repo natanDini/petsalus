@@ -1,5 +1,9 @@
 # PetSalus - Plataforma Completa para Tutores de Pets
 
+<p align = "center">
+  <img src="/images/PetSalus_Logo.png" width="50%" />
+</p>
+
 ## Visão Geral
 O **PetSalus** é uma plataforma inovadora que combina funcionalidades de **agenda, marketplace e rede social** para tutores de pets. Nosso objetivo é facilitar a rotina dos donos de animais, oferecendo soluções inteligentes para organização de consultas, contratação de serviços e interação entre tutores.
 
