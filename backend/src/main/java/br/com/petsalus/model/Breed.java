@@ -1,10 +1,7 @@
 package br.com.petsalus.model;
 
-import br.com.petsalus.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,8 +12,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "pet")
-public class Pet {
+@Table(name = "breed")
+public class Breed {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,25 +23,7 @@ public class Pet {
 	private String name;
 
 	@Column
-	private Integer age;
-
-	@Column
-	private Float weight;
-
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Gender gender;
-
-	@Column(columnDefinition = "BYTEA")
-	private byte[] profilePicture;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private User user;
-
-	@ManyToOne
-	@JoinColumn(name = "breed_id", referencedColumnName = "id", nullable = true)
-	private Breed breed;
+	private String description;
 
 	@ManyToOne
 	@JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)

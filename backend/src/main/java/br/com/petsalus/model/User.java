@@ -1,6 +1,6 @@
 package br.com.petsalus.model;
 
-import br.com.petsalus.enums.Gender;
+import br.com.petsalus.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,14 +9,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "pet")
-public class Pet {
+@Table(name = "app_user")
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,27 +26,25 @@ public class Pet {
 	private String name;
 
 	@Column
-	private Integer age;
+	private String email;
 
 	@Column
-	private Float weight;
+	private String username;
+
+	@Column
+	private String password;
+
+	@Column
+	private String phoneNumber;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Gender gender;
+	private UserRole applicationRole;
 
 	@Column(columnDefinition = "BYTEA")
 	private byte[] profilePicture;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private User user;
-
-	@ManyToOne
-	@JoinColumn(name = "breed_id", referencedColumnName = "id", nullable = true)
-	private Breed breed;
-
-	@ManyToOne
-	@JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)
-	private Specie specie;
+	@OneToOne
+	@JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+	private Address address;
 }

@@ -1,6 +1,8 @@
 package br.com.petsalus.model;
 
-import br.com.petsalus.enums.Gender;
+import java.time.LocalDateTime;
+
+import br.com.petsalus.enums.AgendaStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,38 +17,28 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "pet")
-public class Pet {
+@Table(name = "agenda")
+public class Agenda {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String name;
+	private String service;
 
 	@Column
-	private Integer age;
-
-	@Column
-	private Float weight;
+	private LocalDateTime date;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Gender gender;
-
-	@Column(columnDefinition = "BYTEA")
-	private byte[] profilePicture;
+	private AgendaStatus status;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private User user;
+	@JoinColumn(name = "pet_id", referencedColumnName = "id", nullable = false)
+	private Pet pet;
 
 	@ManyToOne
-	@JoinColumn(name = "breed_id", referencedColumnName = "id", nullable = true)
-	private Breed breed;
-
-	@ManyToOne
-	@JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)
-	private Specie specie;
+	@JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+	private Company company;
 }
