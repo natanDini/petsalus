@@ -1,6 +1,6 @@
 package br.com.petsalus.model;
 
-import br.com.petsalus.enums.Gender;
+import br.com.petsalus.enums.Sexo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,30 +23,30 @@ public class Pet {
 	private Long id;
 
 	@Column
-	private String name;
+	private Float peso;
 
 	@Column
-	private Integer age;
+	private String nome;
 
 	@Column
-	private Float weight;
+	private Integer idade;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Gender gender;
+	private Sexo sexo;
 
 	@Column(columnDefinition = "BYTEA")
-	private byte[] profilePicture;
+	private byte[] fotoPerfil;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "breed_id", referencedColumnName = "id", nullable = true)
-	private Breed breed;
+	@JoinColumn(name = "raca_id", referencedColumnName = "id", nullable = false)
+	private Raca raca;
 
 	@ManyToOne
-	@JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)
-	private Specie specie;
+	@JoinColumn(name = "especie_id", referencedColumnName = "id", nullable = false)
+	private Especie especie;
 }

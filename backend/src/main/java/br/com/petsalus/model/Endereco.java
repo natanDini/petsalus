@@ -10,16 +10,22 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "illness")
-public class Illness {
+@Table(name = "endereco")
+public class Endereco {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String name;
+	private String cep;
 
 	@Column
-	private String description;
+	private String numero;
+
+	@Column
+	private String endereco;
+
+	@Column
+	private String complemento;
 }

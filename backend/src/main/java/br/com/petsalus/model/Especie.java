@@ -10,16 +10,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "specie")
-public class Specie {
+@Table(name = "especie")
+public class Especie {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String name;
+	private String nome;
 
 	@Column
-	private String description;
+	private String descricao;
 }

@@ -1,5 +1,6 @@
 package br.com.petsalus.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,18 +12,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "illness_pet")
-public class IllnessPet {
+@Table(name = "raca")
+public class Raca {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "pet_id", referencedColumnName = "id", nullable = false)
-	private Pet pet;
+	@Column
+	private String nome;
+
+	@Column
+	private String descricao;
 
 	@ManyToOne
-	@JoinColumn(name = "illness_id", referencedColumnName = "id", nullable = false)
-	private Illness illness;
+	@JoinColumn(name = "especie_id", referencedColumnName = "id", nullable = false)
+	private Especie especie;
 }

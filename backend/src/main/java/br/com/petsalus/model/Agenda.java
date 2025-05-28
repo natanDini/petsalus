@@ -25,10 +25,10 @@ public class Agenda {
 	private Long id;
 
 	@Column
-	private String service;
+	private String servico;
 
 	@Column
-	private LocalDateTime date;
+	private LocalDateTime data;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -39,6 +39,6 @@ public class Agenda {
 	private Pet pet;
 
 	@ManyToOne
-	@JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
-	private Company company;
+	@JoinColumn(name = "empresa_id", referencedColumnName = "id", nullable = false)
+	private Empresa empresa;
 }

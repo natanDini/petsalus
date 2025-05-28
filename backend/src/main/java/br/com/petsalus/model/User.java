@@ -11,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Data
 @Entity
@@ -23,28 +25,33 @@ public class User {
 	private Long id;
 
 	@Column
-	private String name;
+	@CPF
+	private String cpf;
 
 	@Column
+	private String nome;
+
+	@Column
+	@Email
 	private String email;
+
+	@Column
+	private String senha;
 
 	@Column
 	private String username;
 
 	@Column
-	private String password;
-
-	@Column
-	private String phoneNumber;
+	private String telefone;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private UserRole applicationRole;
+	private UserRole userRole;
 
 	@Column(columnDefinition = "BYTEA")
-	private byte[] profilePicture;
+	private byte[] fotoPerfil;
 
 	@OneToOne
-	@JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-	private Address address;
+	@JoinColumn(name = "endereco_id", referencedColumnName = "id", nullable = false)
+	private Endereco endereco;
 }

@@ -1,6 +1,6 @@
 package br.com.petsalus.model;
 
-import br.com.petsalus.enums.BusinessModel;
+import br.com.petsalus.enums.ModeloComercial;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,37 +11,44 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 @Data
 @Entity
-@Table(name = "company")
-public class Company {
+@Table(name = "empresa")
+public class Empresa {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String name;
-
-	@Column
+	@CNPJ
 	private String cnpj;
 
 	@Column
-	private String phoneNumber;
+	private String nome;
 
 	@Column
-	private String description;
+	@Email
+	private String email;
+
+	@Column
+	private String telefone;
+
+	@Column
+	private String descricao;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BusinessModel businessModel;
+	private ModeloComercial modeloComercial;
 
 	@Column
-	private boolean worksTwentyFourHours;
+	private boolean trabalhaVinteQuatroHoras;
 
 	@OneToOne
-	@JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-	private Address address;
+	@JoinColumn(name = "endereco_id", referencedColumnName = "id", nullable = false)
+	private Endereco endereco;
 }

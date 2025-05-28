@@ -1,31 +1,37 @@
 package br.com.petsalus.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "breed")
-public class Breed {
+@Table(name = "registro_medico")
+public class RegistroMedico {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String name;
+	private LocalDate data;
 
 	@Column
-	private String description;
+	private String descricao;
 
-	@ManyToOne
-	@JoinColumn(name = "specie_id", referencedColumnName = "id", nullable = false)
-	private Specie specie;
+	@OneToOne
+	@JoinColumn(name = "doutor_id", referencedColumnName = "id")
+	private User doutor;
+
+	@OneToOne
+	@JoinColumn(name = "pet_id", referencedColumnName = "id", nullable = false)
+	private Pet pet;
 }

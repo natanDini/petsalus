@@ -1,31 +1,33 @@
 package br.com.petsalus.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "address")
-public class Address {
+@Table(name = "cartao_vacina")
+public class CartaoVacina {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	private String cep;
+	private String vacina;
 
 	@Column
-	private String address;
+	private LocalDate data;
 
-	@Column
-	private String houseNumber;
-
-	@Column
-	private String description;
+	@ManyToOne
+	@JoinColumn(name = "pet_id", referencedColumnName = "id", nullable = false)
+	private Pet pet;
 }
