@@ -22,9 +22,6 @@ public class Raca {
 	@Column
 	private String nome;
 
-	@Column
-	private String descricao;
-
 	@ManyToOne
 	@JoinColumn(name = "especie_id", referencedColumnName = "id", nullable = false)
 	private Especie especie;

@@ -19,7 +19,4 @@ public class Especie {
 
 	@Column
 	private String nome;
-
-	@Column
-	private String descricao;
 }
