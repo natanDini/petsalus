@@ -8,7 +8,6 @@ import br.com.petsalus.enums.UserRole;
 import br.com.petsalus.exceptions.ConflictException;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.repositories.UserRepository;
-import br.com.petsalus.utils.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserUtils userUtils;
     private final RetornoService retornoService;
 
     private final UserRepository userRepository;
@@ -47,7 +45,6 @@ public class UserService {
 
         User user = new User();
 
-        user.setFotoPerfil(null);
         user.setEndereco(endereco);
         user.setCpf(userAdd.cpf());
         user.setNome(userAdd.nome());
