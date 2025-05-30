@@ -1,4 +1,4 @@
-package br.com.petsalus.model;
+package br.com.petsalus.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +10,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "doenca")
-public class Doenca {
+@Table(name = "especie")
+public class Especie {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

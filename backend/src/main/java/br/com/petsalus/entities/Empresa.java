@@ -1,4 +1,4 @@
-package br.com.petsalus.model;
+package br.com.petsalus.entities;
 
 import br.com.petsalus.enums.ModeloComercial;
 import jakarta.persistence.Column;

@@ -1,4 +1,4 @@
-package br.com.petsalus.model;
+package br.com.petsalus.entities;
 
 import java.time.LocalDate;
 

@@ -15,10 +15,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     open-in-view: false
 
 jwt:
-  secret:
-  expirationMs:   
-  jwtCookieName: 
+  secret: 1sXF1DayAs7RXJdGGf8Iq7ewnAuiA1UEI3TqSo5jY0U=

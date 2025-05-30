@@ -1,4 +1,4 @@
-package br.com.petsalus.model;
+package br.com.petsalus.entities;
 
 import br.com.petsalus.enums.UserRole;
 import jakarta.persistence.Column;
@@ -14,39 +14,44 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "app_user")
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	@CPF
-	private String cpf;
-
-	@Column
 	private String nome;
-
-	@Column
-	@Email
-	private String email;
 
 	@Column
 	private String senha;
 
-	@Column
-	private String username;
-
-	@Column
-	private String telefone;
-
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private UserRole userRole;
+
+	@Column(unique = true, nullable = false)
+	@CPF
+	private String cpf;
+
+	@Column(unique = true, nullable = false)
+	@Email
+	private String email;
+
+	@Column(unique = true, nullable = false)
+	private String username;
+
+	@Column(unique = true, nullable = false)
+	private String telefone;
 
 	@Column(columnDefinition = "BYTEA")
 	private byte[] fotoPerfil;
@@ -54,4 +59,14 @@ public class User {
 	@OneToOne
 	@JoinColumn(name = "endereco_id", referencedColumnName = "id", nullable = false)
 	private Endereco endereco;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of();
+	}
+
+	@Override
+	public String getPassword() {
+		return this.senha;
+	}
 }

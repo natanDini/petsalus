@@ -1,4 +1,4 @@
-package br.com.petsalus.config;
+package br.com.petsalus.configurations;
 
 import javax.sql.DataSource;
 
@@ -13,7 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "br.com.undf.sgaic.repository")
+@EnableJpaRepositories(basePackages = "br.com.petsalus.repositories")
 public class DataSourceConfig {
 
     @Value("${spring.datasource.url}")
