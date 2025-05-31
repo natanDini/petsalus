@@ -21,20 +21,15 @@ public class EspecieService {
 
     public ResponseEntity<Retorno> registrar(EspecieAdd especieAdd) {
 
-        Especie especie = salvar(especieAdd);
+        Especie especie = new Especie();
+
+        especie.setNome(especieAdd.nome());
+
+        especieRepository.save(especie);
 
         racaService.salvarSRD(especie);
 
         log.info(" >>> Especie registrada com sucesso.");
         return retornoService.retornoSucesso("Especie registrada com sucesso.");
-    }
-
-    public Especie salvar(EspecieAdd especieAdd){
-
-        Especie especie = new Especie();
-
-        especie.setNome(especieAdd.nome());
-
-        return especieRepository.save(especie);
     }
 }

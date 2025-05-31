@@ -25,20 +25,15 @@ public class RacaService {
 
         Especie especie = especieUtils.findById(racaAdd.especieId());
 
-        salvar(racaAdd, especie);
-
-        log.info("Raça registrada com sucesso.");
-        return retornoService.retornoSucesso("Raça registrada com sucesso.");
-    }
-
-    public Raca salvar(RacaAdd racaAdd, Especie especie){
-
         Raca raca = new Raca();
 
         raca.setEspecie(especie);
         raca.setNome(racaAdd.nome());
 
-        return racaRepository.save(raca);
+        racaRepository.save(raca);
+
+        log.info("Raça registrada com sucesso.");
+        return retornoService.retornoSucesso("Raça registrada com sucesso.");
     }
 
     public void salvarSRD(Especie especie) {

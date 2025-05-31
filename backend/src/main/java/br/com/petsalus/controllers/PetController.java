@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +30,8 @@ public class PetController {
 
     @Operation(summary = "Registrar Pet", description = "Este endpoint serve para registrar um novo Pet.")
     @PostMapping("/registrar")
-    public ResponseEntity<Retorno> registrar(@RequestBody @Valid PetAdd petAdd) throws CustomException {
+    public ResponseEntity<Retorno> registrar(@RequestBody @Valid PetAdd petAdd, @AuthenticationPrincipal Jwt jwt) throws CustomException {
         log.info(" >>> Tentando registrar um novo Pet.");
-        return petService.registrar(petAdd);
+        return petService.resgistrar(petAdd, jwt);
     }
 }

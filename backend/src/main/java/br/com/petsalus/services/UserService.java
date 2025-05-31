@@ -5,7 +5,6 @@ import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.Endereco;
 import br.com.petsalus.entities.User;
 import br.com.petsalus.enums.UserRole;
-import br.com.petsalus.exceptions.ConflictException;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,26 +21,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final RetornoService retornoService;
+    private final EnderecoService enderecoService;
 
     private final UserRepository userRepository;
 
-    private final EnderecoService enderecoService;
-
     public ResponseEntity<Retorno> registrar(UserAdd userAdd) throws CustomException {
 
-        validaCpfExistente(userAdd.cpf());
-        validaEmailExistente(userAdd.email());
-        validaTelefoneExistente(userAdd.telefone());
-
         Endereco endereco = enderecoService.salvar(userAdd.endereco());
-
-        salvar(endereco, userAdd);
-
-        log.info(" >>> User registrado com sucesso");
-        return retornoService.retornoSucesso("User registrado com sucesso");
-    }
-
-    public User salvar(Endereco endereco, UserAdd userAdd){
 
         User user = new User();
 
@@ -54,24 +40,9 @@ public class UserService {
         user.setUserRole(UserRole.valueOf(userAdd.userRole()));
         user.setSenha(passwordEncoder.encode(userAdd.senha()));
 
-        return userRepository.save(user);
-    }
+        userRepository.save(user);
 
-    public void validaCpfExistente(String cpf){
-        if(userRepository.existsByCpf(cpf)){
-            throw new ConflictException("CPF informado já está em uso.");
-        }
-    }
-
-    public void validaEmailExistente(String email){
-        if(userRepository.existsByEmail(email)){
-            throw new ConflictException("Email informado já está em uso.");
-        }
-    }
-
-    public void validaTelefoneExistente(String telefone){
-        if(userRepository.existsByTelefone(telefone)){
-            throw new ConflictException("Telefone informado já está em uso.");
-        }
+        log.info(" >>> User registrado com sucesso");
+        return retornoService.retornoSucesso("User registrado com sucesso");
     }
 }
