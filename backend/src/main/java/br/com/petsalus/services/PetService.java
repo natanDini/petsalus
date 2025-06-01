@@ -44,8 +44,8 @@ public class PetService {
 
         Pet pet = new Pet();
 
-        pet.setUser(user);
         pet.setRaca(raca);
+        pet.setTutor(user);
         pet.setEspecie(especie);
         pet.setFotoPerfil(null);
         pet.setNome(petAdd.nome());

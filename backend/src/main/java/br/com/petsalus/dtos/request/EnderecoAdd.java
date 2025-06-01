@@ -2,6 +2,7 @@ package br.com.petsalus.dtos.request;
 
 import br.com.petsalus.annotations.EstadoValid;
 import br.com.petsalus.enums.Estados;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -19,6 +20,7 @@ public record EnderecoAdd(
         String cidade,
 
         @NotBlank(message = "O número é obrigatório.")
+        @Digits(integer = 10, fraction = 0, message = "Número residencial deve ser um número inteiro.")
         String numero,
 
         @NotNull(message = "O estado é obrigatório.")

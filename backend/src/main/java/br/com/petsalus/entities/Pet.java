@@ -42,8 +42,8 @@ public class Pet {
 	private byte[] fotoPerfil;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private User user;
+	@JoinColumn(name = "tutor_id", referencedColumnName = "id", nullable = false)
+	private User tutor;
 
 	@ManyToOne
 	@JoinColumn(name = "raca_id", referencedColumnName = "id", nullable = false)
