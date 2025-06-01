@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 public record UserAdd(
 
+        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "Formato de CPF inválido. Use o formato xxx.xxx.xxx-xx.")
         @NotBlank(message = "O CPF é obrigatório.")
         @CPF(message = "CPF inválido.")
         @CpfUnico

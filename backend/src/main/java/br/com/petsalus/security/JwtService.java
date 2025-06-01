@@ -21,7 +21,7 @@ public class JwtService {
         return JWT.create()
                 .withSubject(username)
                 .withClaim("role", userRole)
-                .withExpiresAt(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)))
+                .withExpiresAt(Date.from(Instant.now().plus(99999, ChronoUnit.HOURS)))
                 .sign(getAlgorithm());
     }
 

@@ -31,6 +31,9 @@ public class Pet {
 	@Column
 	private Integer idade;
 
+	@Column
+	private String descricao;
+
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Sexo sexo;
