@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+/* Importações globais e estilos básicos */
+@use '@angular/material' as mat;
+
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Configuração do tema customizado */
+// 1. Defina as paletas de cores
+$my-primary: mat.define-palette(mat.$red-palette, 400);
+$my-accent: mat.define-palette(mat.$indigo-palette, A200, A100, A400);
+$my-warn: mat.define-palette(mat.$red-palette);
+
+// 2. Crie o objeto de tema
+$my-theme: mat.define-light-theme((
+  color: (
+    primary: $my-primary,
+    accent: $my-accent,
+    warn: $my-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 4,
+));
+
+// 3. Inclua os estilos base do Material
+@include mat.core();
+
+// 4. Aplique o tema a todos os componentes
+@include mat.all-component-themes($my-theme);
+
+/* Estilos globais adicionais */
+.mat-typography {
+  // Garante que a tipografia do Material seja aplicada
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
