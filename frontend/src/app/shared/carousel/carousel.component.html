@@ -1,0 +1,32 @@
+<div class="carousel-wrapper">
+  <div #carouselContainer class="carousel-container">
+    <mat-card *ngFor="let slide of slides" class="carousel-slide">
+      <img *ngIf="slide.image" [src]="slide.image" [alt]="slide.title || 'Slide image'" class="slide-image">
+      <mat-card-header *ngIf="slide.title">
+        <mat-card-title>{{ slide.title }}</mat-card-title>
+        <mat-card-subtitle *ngIf="slide.subtitle">{{ slide.subtitle }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content *ngIf="slide.content">
+        <p>{{ slide.content }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="carousel-controls" *ngIf="showControls && slides.length > 1">
+    <button mat-icon-button (click)="prevSlide()" class="control-button prev-button">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button (click)="nextSlide()" class="control-button next-button">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="carousel-indicators" *ngIf="showIndicators && slides.length > 1">
+    <button
+      *ngFor="let slide of slides; let i = index"
+      (click)="goToSlide(i)"
+      [class.active]="i === currentIndex"
+      class="indicator"
+    ></button>
+  </div>
+</div>

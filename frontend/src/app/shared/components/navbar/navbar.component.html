@@ -1,0 +1,42 @@
+<mat-toolbar [color]="color" class="mat-elevation-z6">
+  <button mat-icon-button class="mobile-menu-button">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <a routerLink="/" class="app-name">
+
+    <img src="./assets/logo-petsalus.png"  width="60" height="60">
+  </a>
+
+  <span class="spacer"></span>
+
+  <!-- Menu para desktop -->
+  <div class="desktop-menu">
+    <a
+      *ngFor="let item of menuItems"
+      mat-button
+      [routerLink]="item.path"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+      {{ item.title }}
+    </a>
+  </div>
+
+  <!-- Menu para mobile -->
+  <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="mobile-menu-button">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #mobileMenu="matMenu">
+    <a
+      *ngFor="let item of menuItems"
+      mat-menu-item
+      [routerLink]="item.path"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+      <span>{{ item.title }}</span>
+    </a>
+  </mat-menu>
+</mat-toolbar>

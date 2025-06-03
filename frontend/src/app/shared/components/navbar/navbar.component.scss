@@ -1,0 +1,68 @@
+@use '@angular/material' as mat;
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 2rem;
+  height: 64px;
+
+  @media (max-width: 959px) {
+    padding: 0 1rem;
+  }
+}
+
+.app-name {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  margin-right: 1rem;
+
+  span {
+    margin-left: 8px;
+    font-weight: 500;
+    font-size: 1.2rem;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.desktop-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  @media (max-width: 959px) {
+    display: none;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 64px;
+    border-radius: 0;
+
+    &.active-link {
+      border-bottom: 3px solid mat.get-color-from-palette(mat.$indigo-palette, 300);
+    }
+  }
+}
+
+.mobile-menu-button {
+  @media (min-width: 960px) {
+    display: none;
+  }
+}
+
+.active-link {
+  background-color: rgba(255, 255, 255, 0.1);
+
+  .mat-icon {
+    color: mat.get-color-from-palette(mat.$indigo-palette, 300);
+  }
+}
+
