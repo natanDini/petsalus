@@ -10,10 +10,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -29,5 +31,13 @@ public class UserController {
     public ResponseEntity<Retorno> registrar(@RequestBody @Valid UserAdd alunoAdd) throws CustomException {
         log.info(" >>> Tentando registrar um novo User.");
         return userService.registrar(alunoAdd);
+    }
+
+    @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de usuário logado.")
+    @PostMapping("/upload-foto")
+    public ResponseEntity<Retorno> uploadFoto(@RequestParam MultipartFile foto, @AuthenticationPrincipal Jwt jwt)
+            throws CustomException, IOException {
+        log.info(" >>> Um Usuário está tentando alterar sua foto de perfil na aplicação");
+        return userService.uploadFoto(foto, jwt);
     }
 }

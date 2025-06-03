@@ -1,5 +1,5 @@
 package br.com.petsalus.enums;
 
 public enum UserRole {
-	TUTOR, MEDICO, ADMINISTRADOR
+	TUTOR, MEDICO, DONO, EMPREGADO
 }

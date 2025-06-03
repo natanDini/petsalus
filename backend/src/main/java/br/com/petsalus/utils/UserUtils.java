@@ -5,6 +5,7 @@ import br.com.petsalus.exceptions.NotFoundException;
 import br.com.petsalus.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -16,11 +17,17 @@ public class UserUtils {
 
     public User findById(Long id){
         return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User informado não encontrado."));
+                .orElseThrow(() -> new NotFoundException("Usuário informado não encontrado."));
     }
 
     public User findByUsername(String username){
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User informado não encontrado."));
+                .orElseThrow(() -> new NotFoundException("Usuário informado não encontrado."));
+    }
+
+    public User findByJwt(Jwt jwt){
+        String username = jwt.getSubject();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("Usuário logado não encontrado."));
     }
 }

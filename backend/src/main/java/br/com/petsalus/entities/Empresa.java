@@ -1,16 +1,7 @@
 package br.com.petsalus.entities;
 
 import br.com.petsalus.enums.ModeloComercial;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -51,4 +42,8 @@ public class Empresa {
 	@OneToOne
 	@JoinColumn(name = "endereco_id", referencedColumnName = "id", nullable = false)
 	private Endereco endereco;
+
+	@ManyToOne
+	@JoinColumn(name = "dono_id", referencedColumnName = "id", nullable = false)
+	private User dono;
 }

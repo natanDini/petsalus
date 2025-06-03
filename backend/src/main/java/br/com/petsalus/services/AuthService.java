@@ -32,7 +32,7 @@ public class AuthService {
            User user = userUtils.findByUsername(login.username());
            String userRole = user.getUserRole().name();
 
-           String token = jwtService.generateToken(login.username());
+           String token = jwtService.generateToken(login.username(), userRole);
 
            LoginRes loginRes = LoginRes.builder()
                    .token(token)
