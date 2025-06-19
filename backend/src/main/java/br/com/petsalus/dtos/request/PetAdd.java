@@ -13,9 +13,6 @@ public record PetAdd(
         @Size(max = 100, message = "O nome deve ter no máximo 100 caracteres.")
         String nome,
 
-        @Size(max = 250, message = "A descricao deve ter no máximo 250 caracteres.")
-        String descricao,
-
         @NotNull(message = "Idade é obrigatório.")
         @Min(value = 0, message = "A idade não pode ser negativa.")
         Integer idade,

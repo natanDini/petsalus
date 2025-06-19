@@ -6,6 +6,7 @@ import br.com.petsalus.dtos.response.EmpresaShortRes;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.Empresa;
 import br.com.petsalus.entities.Endereco;
+import br.com.petsalus.entities.Pet;
 import br.com.petsalus.entities.User;
 import br.com.petsalus.enums.ModeloComercial;
 import br.com.petsalus.enums.UserRole;
@@ -22,7 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -69,6 +72,18 @@ public class EmpresaService {
 
         log.info(" >>> Empresa registrada com sucesso.");
         return retornoService.retornoSucesso("Empresa registrada com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> uploadFoto(Long empresaId, MultipartFile foto) throws CustomException, IOException {
+
+        Empresa empresa = empresaUtils.findById(empresaId);
+
+        empresa.setFotoPerfil(foto.getBytes());
+
+        empresaRepository.save(empresa);
+
+        log.info(" >>> Foto de empresa registrada com sucesso.");
+        return retornoService.retornoSucesso("Foto de empresa registrada com sucesso.");
     }
 
     public List<EmpresaShortRes> listar() throws CustomException {

@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +34,14 @@ public class EmpresaController {
     public ResponseEntity<Retorno> registrar(@RequestBody @Valid EmpresaAdd empresaAdd, @AuthenticationPrincipal Jwt jwt) throws CustomException {
         log.info(" >>> Tentando registrar uma nova Empresa.");
         return empresaService.registrar(empresaAdd, jwt);
+    }
+
+    @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de empresa.")
+    @PostMapping("/upload-foto/{empresaId}")
+    public ResponseEntity<Retorno> uploadFoto(@PathVariable Long empresaId, @RequestParam MultipartFile foto)
+            throws CustomException, IOException {
+        log.info(" >>> Um Usuário está tentando alterar a foto de empresa.");
+        return empresaService.uploadFoto(empresaId, foto);
     }
 
     @Operation(summary = "Empresa getAll", description = "Este endpoint serve para listar todas as Empresas.")

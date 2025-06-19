@@ -51,7 +51,6 @@ public class PetService {
         pet.setNome(petAdd.nome());
         pet.setPeso(petAdd.peso());
         pet.setIdade(petAdd.idade());
-        pet.setDescricao(petAdd.descricao());
         pet.setSexo(Sexo.valueOf(petAdd.sexo()));
 
         petRepository.save(pet);

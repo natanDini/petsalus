@@ -7,17 +7,17 @@ import java.time.LocalTime;
 
 @Builder
 public record EmpresaShortRes(
-       
-         Long id,
-         String nome,
-         String descricao,
-         String fotoPerfil,
-         String modeloComercial,
-         boolean trabalhaVinteQuatroHoras,
 
-         @JsonFormat(pattern = "HH:mm")
-         LocalTime horaAbertura,
+    @JsonFormat(pattern = "HH:mm")
+    LocalTime horaAbertura,
 
-         @JsonFormat(pattern = "HH:mm")
-         LocalTime horaEncerramento) {
+    @JsonFormat(pattern = "HH:mm")
+    LocalTime horaEncerramento,
+
+    Long id,
+    String nome,
+    String descricao,
+    String modeloComercial,
+    boolean trabalhaVinteQuatroHoras,
+    String fotoPerfil) {
 }
