@@ -25,6 +25,11 @@ public class UserUtils {
                 .orElseThrow(() -> new NotFoundException("Usuário informado não encontrado."));
     }
 
+    public User findByCpf(String cpf){
+        return userRepository.findByCpf(cpf)
+                .orElseThrow(() -> new NotFoundException("Usuário informado não encontrado."));
+    }
+
     public User findByJwt(Jwt jwt){
         String username = jwt.getSubject();
         return userRepository.findByUsername(username)
