@@ -89,6 +89,90 @@ public class EmpresaService {
         return EmpresaResMapper.map(empresa);
     }
 
+    public List<EmpresaShortRes> clinicas() throws CustomException {
+
+        List<ModeloComercial> modelosAceitos = List.of(
+                ModeloComercial.CLINICA,
+                ModeloComercial.CLINICA_E_PET_SHOP
+        );
+
+        List<Empresa> empresas = empresaRepository.findAllByAndModeloComercialIn(modelosAceitos);
+
+        emptyUtils.validaListaVazia(empresas, "Nenhuma clinica encontrada.");
+
+        log.info(" >>> Clinicas listadas com sucesso.");
+        return EmpresaShortResMapper.map(empresas);
+    }
+
+    public List<EmpresaShortRes> petShops() throws CustomException {
+
+        List<ModeloComercial> modelosAceitos = List.of(
+                ModeloComercial.PET_SHOP,
+                ModeloComercial.CLINICA_E_PET_SHOP
+        );
+
+        List<Empresa> empresas = empresaRepository.findAllByAndModeloComercialIn(modelosAceitos);
+
+        emptyUtils.validaListaVazia(empresas, "Nenhum PetShop encontrado.");
+
+        log.info(" >>> PetShops listados com sucesso.");
+        return EmpresaShortResMapper.map(empresas);
+    }
+
+    public List<EmpresaShortRes> emergencias() throws CustomException {
+
+        List<ModeloComercial> modelosAceitos = List.of(
+                ModeloComercial.CLINICA,
+                ModeloComercial.CLINICA_E_PET_SHOP
+        );
+
+        List<Empresa> empresas = empresaRepository
+                .findAllByTrabalhaVinteQuatroHorasIsTrueAndModeloComercialIn(modelosAceitos);
+
+        emptyUtils.validaListaVazia(empresas, "Nenhuma clinica de emergência encontrada.");
+
+        log.info(" >>> Clinicas de emergência listadas com sucesso.");
+        return EmpresaShortResMapper.map(empresas);
+    }
+
+    public ResponseEntity<Retorno> deletar(Long empresaId) throws CustomException {
+
+        Empresa empresa = empresaUtils.findById(empresaId);
+
+        empresaRepository.delete(empresa);
+
+        log.info(" >>> Empresa removida com sucesso.");
+        return retornoService.retornoSucesso("Empresa removida com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> editar(Long empresaId, EmpresaAdd empresaAdd) throws CustomException {
+
+        Endereco endereco = enderecoService.salvar(empresaAdd.endereco());
+
+        Empresa empresa = empresaUtils.findById(empresaId);
+
+        empresa.setEndereco(endereco);
+        empresa.setNome(empresaAdd.nome());
+        empresa.setCnpj(empresaAdd.cnpj());
+        empresa.setEmail(empresaAdd.email());
+        empresa.setDescricao(empresaAdd.descricao());
+        empresa.setTelefone(empresaAdd.telefone());
+        empresa.setHoraAbertura(null);
+        empresa.setHoraEncerramento(null);
+        empresa.setTrabalhaVinteQuatroHoras(empresaAdd.trabalhaVinteQuatroHoras());
+        empresa.setModeloComercial(ModeloComercial.valueOf(empresaAdd.modeloComercial()));
+
+        if (!empresaAdd.trabalhaVinteQuatroHoras()) {
+            empresa.setHoraAbertura(empresaAdd.horaAbertura());
+            empresa.setHoraEncerramento(empresaAdd.horaEncerramento());
+        }
+
+        empresaRepository.save(empresa);
+
+        log.info(" >>> Empresa editada com sucesso.");
+        return retornoService.retornoSucesso("Empresa editada com sucesso.");
+    }
+
     public void isUserRoleValid(UserRole role){
         if (!role.equals(UserRole.DONO)){
             throw new BadRequestException("Para cadastrar uma empresa é necessário ser um usuário DONO.");

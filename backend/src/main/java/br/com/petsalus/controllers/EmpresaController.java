@@ -9,7 +9,6 @@ import br.com.petsalus.services.EmpresaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -49,10 +48,38 @@ public class EmpresaController {
         return empresaService.getById(empresaId);
     }
 
-//    @Operation(summary = "Empresas 24h", description = "Este endpoint serve para retornar empresas (CLINICA, CLINICA_E_PET_SHOP) que funcionam 24h.")
-//    @GetMapping("/clinicas/emergencias")
-//    public ResponseEntity<Retorno> emergencias(@RequestBody @Valid EmpresaAdd empresaAdd, @AuthenticationPrincipal Jwt jwt) throws CustomException {
-//        log.info(" >>> Tentando registrar uma nova Empresa.");
-//        return empresaService.registrar(empresaAdd, jwt);
-//    }
+    @Operation(summary = "Clinicas", description = "Este endpoint serve para retornar empresas (CLINICA, CLINICA_E_PET_SHOP).")
+    @GetMapping("/clinicas")
+    public List<EmpresaShortRes> clinicas() throws CustomException {
+        log.info(" >>> Tentando retornar clinicas.");
+        return empresaService.clinicas();
+    }
+
+    @Operation(summary = "PetShops", description = "Este endpoint serve para retornar empresas (PET_SHOP, CLINICA_E_PET_SHOP).")
+    @GetMapping("/pet-shops")
+    public List<EmpresaShortRes> petShops() throws CustomException {
+        log.info(" >>> Tentando retornar pet-shops.");
+        return empresaService.petShops();
+    }
+
+    @Operation(summary = "Empresas 24h", description = "Este endpoint serve para retornar empresas (CLINICA, CLINICA_E_PET_SHOP) que funcionam 24h.")
+    @GetMapping("/clinicas/emergencia")
+    public List<EmpresaShortRes> emergencias() throws CustomException {
+        log.info(" >>> Tentando retornar clinicas de emergencias.");
+        return empresaService.emergencias();
+    }
+
+    @Operation(summary = "Deletar Empresa", description = "Este endpoint serve para deletar uma Empresa.")
+    @DeleteMapping("/deletar/{empresaId}")
+    public ResponseEntity<Retorno> deletar(@PathVariable Long empresaId) throws CustomException {
+        log.info(" >>> Tentando deletar uma Empresa.");
+        return empresaService.deletar(empresaId);
+    }
+
+    @Operation(summary = "Editar Empresa", description = "Este endpoint serve para editar uma Empresa.")
+    @PutMapping("/editar/{empresaId}")
+    public ResponseEntity<Retorno> editar(@PathVariable Long empresaId, @RequestBody @Valid EmpresaAdd empresaAdd) throws CustomException {
+        log.info(" >>> Tentando editar uma Empresa.");
+        return empresaService.editar(empresaId, empresaAdd);
+    }
 }
