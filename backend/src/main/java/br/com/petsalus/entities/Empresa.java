@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+import java.time.LocalTime;
+
 @Data
 @Entity
 @Table(name = "empresa")
@@ -14,6 +16,12 @@ public class Empresa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column
+	private LocalTime horaAbertura;
+
+	@Column
+	private LocalTime horaEncerramento;
 
 	@Column
 	@CNPJ
@@ -31,6 +39,9 @@ public class Empresa {
 
 	@Column
 	private String descricao;
+
+	@Column(columnDefinition = "BYTEA")
+	private byte[] fotoPerfil;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

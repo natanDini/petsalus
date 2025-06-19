@@ -1,12 +1,15 @@
 package br.com.petsalus.dtos.request;
 
 import br.com.petsalus.annotations.ModeloComercialValid;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
+
+import java.time.LocalTime;
 
 public record EmpresaAdd (
 
@@ -35,6 +38,12 @@ public record EmpresaAdd (
 
         @NotNull(message = "O campo trabalhaVinteQuatroHoras é obrigatório.")
         Boolean trabalhaVinteQuatroHoras,
+
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime horaAbertura,
+
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime horaEncerramento,
 
         @Valid
         EnderecoAdd endereco){
