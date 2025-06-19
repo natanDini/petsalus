@@ -1,15 +1,6 @@
 package br.com.petsalus.entities;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -21,17 +12,11 @@ public class RegistroMedico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
-	private LocalDate data;
-
-	@Column
-	private String descricao;
-
-	@OneToOne
-	@JoinColumn(name = "doutor_id", referencedColumnName = "id")
-	private User doutor;
-
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "pet_id", referencedColumnName = "id", nullable = false)
 	private Pet pet;
+
+	@ManyToOne
+	@JoinColumn(name = "servico_agenda_id", referencedColumnName = "id", nullable = false)
+	private ServicoAgenda servicoAgenda;
 }
