@@ -1,7 +1,19 @@
 .project
 
+# IntelliJ IDEA
+.idea/
+out/
+
+# Maven
+target/
+
+# Android Studio
+*.iml
+.gradle/
+build/
+
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
-*.iml
 *.ipr
