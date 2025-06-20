@@ -6,7 +6,6 @@ import br.com.petsalus.dtos.response.EmpresaShortRes;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.Empresa;
 import br.com.petsalus.entities.Endereco;
-import br.com.petsalus.entities.Pet;
 import br.com.petsalus.entities.User;
 import br.com.petsalus.enums.ModeloComercial;
 import br.com.petsalus.enums.UserRole;
@@ -58,15 +57,10 @@ public class EmpresaService {
         empresa.setEmail(empresaAdd.email());
         empresa.setDescricao(empresaAdd.descricao());
         empresa.setTelefone(empresaAdd.telefone());
-        empresa.setHoraAbertura(null);
-        empresa.setHoraEncerramento(null);
+        empresa.setHoraAbertura(empresaAdd.horaAbertura());
+        empresa.setHoraEncerramento(empresaAdd.horaEncerramento());
         empresa.setTrabalhaVinteQuatroHoras(empresaAdd.trabalhaVinteQuatroHoras());
         empresa.setModeloComercial(ModeloComercial.valueOf(empresaAdd.modeloComercial()));
-
-        if (!empresaAdd.trabalhaVinteQuatroHoras()) {
-            empresa.setHoraAbertura(empresaAdd.horaAbertura());
-            empresa.setHoraEncerramento(empresaAdd.horaEncerramento());
-        }
 
         empresaRepository.save(empresa);
 
@@ -172,15 +166,10 @@ public class EmpresaService {
         empresa.setEmail(empresaAdd.email());
         empresa.setDescricao(empresaAdd.descricao());
         empresa.setTelefone(empresaAdd.telefone());
-        empresa.setHoraAbertura(null);
-        empresa.setHoraEncerramento(null);
+        empresa.setHoraAbertura(empresaAdd.horaAbertura());
+        empresa.setHoraEncerramento(empresaAdd.horaEncerramento());
         empresa.setTrabalhaVinteQuatroHoras(empresaAdd.trabalhaVinteQuatroHoras());
         empresa.setModeloComercial(ModeloComercial.valueOf(empresaAdd.modeloComercial()));
-
-        if (!empresaAdd.trabalhaVinteQuatroHoras()) {
-            empresa.setHoraAbertura(empresaAdd.horaAbertura());
-            empresa.setHoraEncerramento(empresaAdd.horaEncerramento());
-        }
 
         empresaRepository.save(empresa);
 
