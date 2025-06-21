@@ -1,12 +1,17 @@
 package org.example.project
 
 
-import CadastroScreen
+
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.example.project.ui.screens.LoginScreen
+import org.example.project.ui.screens.MenuScreen
+import org.example.project.ui.screens.PerfilScreen
+import org.example.project.ui.screens.SplashScreen
+import org.example.project.ui.screens.CadastroScreen
 
 @Composable
 fun App() {
