@@ -4,22 +4,20 @@ import br.com.petsalus.dtos.response.Agendamento;
 import br.com.petsalus.dtos.response.MeusAgendamentos;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.*;
+import br.com.petsalus.enums.RegistroMedicoStatus;
 import br.com.petsalus.enums.ServicoAgendaStatus;
+import br.com.petsalus.enums.TipoServico;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.mappers.AgendamentoMapper;
 import br.com.petsalus.repositories.EmpresaEmpregadoRepository;
 import br.com.petsalus.repositories.ServicoAgendaEmpregadoRepository;
 import br.com.petsalus.repositories.ServicoAgendaRepository;
 import br.com.petsalus.repositories.ServicoEmpregadoRepository;
-import br.com.petsalus.utils.CustomExceptionUtils;
-import br.com.petsalus.utils.PetUtils;
-import br.com.petsalus.utils.ServicoAgendaUtils;
-import br.com.petsalus.utils.ServicoUtils;
+import br.com.petsalus.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -40,6 +38,7 @@ public class ServicoAgendaService {
     private final PetUtils petUtils;
     private final ServicoUtils servicoUtils;
     private final ServicoAgendaUtils servicoAgendaUtils;
+    private final RegistroMedicoUtils registroMedicoUtils;
     private final CustomExceptionUtils customExceptionUtils;
 
     private final RetornoService retornoService;
@@ -188,10 +187,12 @@ public class ServicoAgendaService {
                 // cria agenda
                 ServicoAgenda agenda = new ServicoAgenda();
 
-                agenda.setServico(servico);
                 agenda.setPet(pet);
-                agenda.setStatus(ServicoAgendaStatus.PENDENTE);
+                agenda.setEmpregado(emp);
+                agenda.setServico(servico);
                 agenda.setDataHora(inicioSolicitado);
+                agenda.setStatus(ServicoAgendaStatus.PENDENTE);
+                agenda.setTipoAgendamento(RegistroMedicoStatus.ROTINA_AGENDAMENTO);
 
                 servicoAgendaRepository.save(agenda);
 
@@ -231,6 +232,10 @@ public class ServicoAgendaService {
 
         servicoAgendaRepository.save(servicoAgenda);
 
+        if (servicoAgenda.getServico().getTipoServico().equals(TipoServico.CLINICO)) {
+            registroMedicoUtils.salvar(servicoAgenda.getPet(), servicoAgenda, servicoAgenda.getServico().getDescricao());
+        }
+
         log.info(" >>> Serviço Agendado efetivado com sucesso.");
         return retornoService.retornoSucesso("Serviço Agendado efetivado com sucesso.");
     }
@@ -253,6 +258,20 @@ public class ServicoAgendaService {
                 .cancelados(canceladosMapped)
                 .efetivados(efetivadosMapped)
                 .build();
+    }
+
+    public ServicoAgenda registrarEmergencia(Pet pet, Servico servico, LocalDateTime dataHora, User veterinario) throws CustomException {
+
+        ServicoAgenda servicoAgenda = new ServicoAgenda();
+
+        servicoAgenda.setPet(pet);
+        servicoAgenda.setServico(servico);
+        servicoAgenda.setDataHora(dataHora);
+        servicoAgenda.setEmpregado(veterinario);
+        servicoAgenda.setStatus(ServicoAgendaStatus.EFETIVADO);
+        servicoAgenda.setTipoAgendamento(RegistroMedicoStatus.EMERGENCIA);
+
+        return servicoAgendaRepository.save(servicoAgenda);
     }
 
     private void validarHorarioEmpresa(LocalDateTime inicio,
