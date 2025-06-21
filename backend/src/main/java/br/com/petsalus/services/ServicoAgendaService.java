@@ -1,20 +1,25 @@
 package br.com.petsalus.services;
 
+import br.com.petsalus.dtos.response.Agendamento;
+import br.com.petsalus.dtos.response.MeusAgendamentos;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.*;
 import br.com.petsalus.enums.ServicoAgendaStatus;
 import br.com.petsalus.exceptions.CustomException;
+import br.com.petsalus.mappers.AgendamentoMapper;
 import br.com.petsalus.repositories.EmpresaEmpregadoRepository;
 import br.com.petsalus.repositories.ServicoAgendaEmpregadoRepository;
 import br.com.petsalus.repositories.ServicoAgendaRepository;
 import br.com.petsalus.repositories.ServicoEmpregadoRepository;
 import br.com.petsalus.utils.CustomExceptionUtils;
 import br.com.petsalus.utils.PetUtils;
+import br.com.petsalus.utils.ServicoAgendaUtils;
 import br.com.petsalus.utils.ServicoUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -34,76 +39,15 @@ public class ServicoAgendaService {
 
     private final PetUtils petUtils;
     private final ServicoUtils servicoUtils;
+    private final ServicoAgendaUtils servicoAgendaUtils;
     private final CustomExceptionUtils customExceptionUtils;
 
     private final RetornoService retornoService;
 
-    private final ServicoEmpregadoRepository servicoEmpRepo;
-    private final EmpresaEmpregadoRepository empresaEmpRepo;
-    private final ServicoAgendaRepository servicoAgendaRepo;
-    private final ServicoAgendaEmpregadoRepository agendaEmpRepo;
-
-    public ResponseEntity<Retorno> registrar(Long servicoId,
-                                             Long petId,
-                                             LocalDateTime inicioSolicitado)
-            throws CustomException {
-
-        Servico servico = servicoUtils.findById(servicoId);
-        Pet     pet     = petUtils.findById(petId);
-        Empresa empresa = servico.getEmpresa();
-
-        validarHorarioEmpresa(inicioSolicitado, servico.getTempoServicoMin(), empresa);
-
-        // --- candidatos que fazem o serviço e pertencem à empresa -----------------
-        Set<User> habilitados = servicoEmpRepo.findByServico(servico).stream()
-                .map(ServicoEmpregado::getEmpregado)
-                .collect(Collectors.toSet());
-
-        List<User> candidatos = empresaEmpRepo.findAllByEmpresa(empresa).stream()
-                .map(EmpresaEmpregado::getEmpregado)
-                .filter(habilitados::contains)
-                .toList();
-
-        if (candidatos.isEmpty()) {
-            throw customExceptionUtils.errorAndBadRequest("A empresa não possui empregados habilitados para este serviço.");
-        }
-
-        LocalDateTime fimSolicitado = inicioSolicitado.plusMinutes(servico.getTempoServicoMin());
-
-        // --- procura o primeiro disponível ----------------------------------------
-        for (User emp : candidatos) {
-            boolean ocupado = agendaEmpRepo.encontrarConflitos(
-                            emp, inicioSolicitado, fimSolicitado, ServicoAgendaStatus.CANCELADO)
-                    .stream()
-                    .findAny()
-                    .isPresent();
-
-            if (!ocupado) {
-                // cria agenda
-                ServicoAgenda agenda = new ServicoAgenda();
-
-                agenda.setServico(servico);
-                agenda.setPet(pet);
-                agenda.setStatus(ServicoAgendaStatus.PENDENTE);
-                agenda.setDataHora(inicioSolicitado);
-
-                servicoAgendaRepo.save(agenda);
-
-                // vincula funcionário
-
-                ServicoAgendaEmpregado sae = new ServicoAgendaEmpregado();
-
-                sae.setServicoAgenda(agenda);
-                sae.setEmpregado(emp);
-
-                agendaEmpRepo.save(sae);
-
-                return retornoService.retornoSucesso("Agendamento criado: " + agenda.getId());
-            }
-        }
-
-        throw customExceptionUtils.errorAndBadRequest("Nenhum empregado disponível para o horário solicitado.");
-    }
+    private final ServicoAgendaRepository servicoAgendaRepository;
+    private final ServicoEmpregadoRepository servicoEmpregadoRepository;
+    private final EmpresaEmpregadoRepository empresaEmpregadoRepository;
+    private final ServicoAgendaEmpregadoRepository servicoAgendaEmpregadoRepository;
 
     public ResponseEntity<List<String>> buscarHorariosDisponiveis(Long servicoId,
                                                                   LocalDate data)
@@ -118,9 +62,6 @@ public class ServicoAgendaService {
         return ResponseEntity.ok(resposta);
     }
 
-    /* ------------------------------------------------------------------ */
-    /*  LÓGICA DE DOMÍNIO — PERMANECE COMO ESTAVA (ajustada p/ Map<Long>) */
-    /* ------------------------------------------------------------------ */
     private List<LocalTime> calcularHorariosDisponiveis(Long servicoId,
                                                         LocalDate data)
             throws CustomException {
@@ -133,23 +74,21 @@ public class ServicoAgendaService {
         LocalTime fecha   = empresa.getHoraEncerramento();
 
         if (abre.plusMinutes(duracaoMin).isAfter(fecha))
-            return List.of();   // serviço não cabe
+            return List.of();
 
-        /* --- empregados elegíveis -------------------------------------- */
-        Set<User> elegiveis = servicoEmpRepo.findByServico(servico).stream()
+        Set<User> elegiveis = servicoEmpregadoRepository.findByServico(servico).stream()
                 .map(ServicoEmpregado::getEmpregado)
-                .filter(emp -> empresaEmpRepo.existsByEmpresaAndEmpregado(empresa, emp))
+                .filter(emp -> empresaEmpregadoRepository.existsByEmpresaAndEmpregado(empresa, emp))
                 .collect(Collectors.toSet());
 
         if (elegiveis.isEmpty())
             throw customExceptionUtils.errorAndBadRequest(
                     "A empresa não possui empregados para este serviço.");
 
-        /* --- ocupações do dia ------------------------------------------ */
         LocalDateTime inicioDia = data.atTime(abre);
         LocalDateTime fimDia    = data.atTime(fecha);
 
-        List<ServicoAgendaEmpregado> ocupacoes = agendaEmpRepo
+        List<ServicoAgendaEmpregado> ocupacoes = servicoAgendaEmpregadoRepository
                 .buscarEntreDatas(elegiveis, inicioDia, fimDia,
                         ServicoAgendaStatus.CANCELADO);
 
@@ -192,7 +131,7 @@ public class ServicoAgendaService {
     /* --------------------- funções auxiliares ------------------------- */
 
     private int calcularGradeMinutos(Empresa empresa) {
-        List<Long> duracoes = servicoEmpRepo.findDistinctDurationsByEmpresa(empresa);
+        List<Long> duracoes = servicoEmpregadoRepository.findDistinctDurationsByEmpresa(empresa);
         return duracoes.stream()
                 .mapToInt(Long::intValue)
                 .reduce(this::mdc)
@@ -208,6 +147,112 @@ public class ServicoAgendaService {
         boolean sobrepoe(LocalTime aIni, LocalTime aFim) {
             return aIni.isBefore(fim) && aFim.isAfter(ini);  // [ini,fim)
         }
+    }
+
+    public ResponseEntity<Retorno> registrar(Long servicoId,
+                                             Long petId,
+                                             LocalDateTime inicioSolicitado)
+            throws CustomException {
+
+        Servico servico = servicoUtils.findById(servicoId);
+        Pet     pet     = petUtils.findById(petId);
+        Empresa empresa = servico.getEmpresa();
+
+        validarHorarioEmpresa(inicioSolicitado, servico.getTempoServicoMin(), empresa);
+
+        // --- candidatos que fazem o serviço e pertencem à empresa -----------------
+        Set<User> habilitados = servicoEmpregadoRepository.findByServico(servico).stream()
+                .map(ServicoEmpregado::getEmpregado)
+                .collect(Collectors.toSet());
+
+        List<User> candidatos = empresaEmpregadoRepository.findAllByEmpresa(empresa).stream()
+                .map(EmpresaEmpregado::getEmpregado)
+                .filter(habilitados::contains)
+                .toList();
+
+        if (candidatos.isEmpty()) {
+            throw customExceptionUtils.errorAndBadRequest("A empresa não possui empregados habilitados para este serviço.");
+        }
+
+        LocalDateTime fimSolicitado = inicioSolicitado.plusMinutes(servico.getTempoServicoMin());
+
+        // --- procura o primeiro disponível ----------------------------------------
+        for (User emp : candidatos) {
+            boolean ocupado = servicoAgendaEmpregadoRepository.encontrarConflitos(
+                            emp, inicioSolicitado, fimSolicitado, ServicoAgendaStatus.CANCELADO)
+                    .stream()
+                    .findAny()
+                    .isPresent();
+
+            if (!ocupado) {
+                // cria agenda
+                ServicoAgenda agenda = new ServicoAgenda();
+
+                agenda.setServico(servico);
+                agenda.setPet(pet);
+                agenda.setStatus(ServicoAgendaStatus.PENDENTE);
+                agenda.setDataHora(inicioSolicitado);
+
+                servicoAgendaRepository.save(agenda);
+
+                // vincula funcionário
+
+                ServicoAgendaEmpregado sae = new ServicoAgendaEmpregado();
+
+                sae.setServicoAgenda(agenda);
+                sae.setEmpregado(emp);
+
+                servicoAgendaEmpregadoRepository.save(sae);
+
+                return retornoService.retornoSucesso("Agendamento criado: " + agenda.getId());
+            }
+        }
+
+        throw customExceptionUtils.errorAndBadRequest("Nenhum empregado disponível para o horário solicitado.");
+    }
+
+    public ResponseEntity<Retorno> cancelar(Long servicoAgendaIdId) throws CustomException {
+        
+        ServicoAgenda servicoAgenda = servicoAgendaUtils.findById(servicoAgendaIdId);
+
+        servicoAgenda.setStatus(ServicoAgendaStatus.CANCELADO);
+
+        servicoAgendaRepository.save(servicoAgenda);
+
+        log.info(" >>> Serviço Agendado cancelado com sucesso.");
+        return retornoService.retornoSucesso("Serviço Agendado cancelado com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> efetivar(Long servicoAgendaId) throws CustomException {
+
+        ServicoAgenda servicoAgenda = servicoAgendaUtils.findById(servicoAgendaId);
+
+        servicoAgenda.setStatus(ServicoAgendaStatus.EFETIVADO);
+
+        servicoAgendaRepository.save(servicoAgenda);
+
+        log.info(" >>> Serviço Agendado efetivado com sucesso.");
+        return retornoService.retornoSucesso("Serviço Agendado efetivado com sucesso.");
+    }
+
+    public MeusAgendamentos meusAgendamentos(Long petId) throws CustomException {
+
+        Pet pet = petUtils.findById(petId);
+
+        List<ServicoAgenda> pendentes = servicoAgendaRepository.findByPetAndStatus(pet, ServicoAgendaStatus.PENDENTE);
+        List<ServicoAgenda> cancelados = servicoAgendaRepository.findByPetAndStatus(pet, ServicoAgendaStatus.CANCELADO);
+        List<ServicoAgenda> efetivados = servicoAgendaRepository.findByPetAndStatus(pet, ServicoAgendaStatus.EFETIVADO);
+
+        List<Agendamento> pendentesMapped = AgendamentoMapper.map(pendentes);
+        List<Agendamento> canceladosMapped = AgendamentoMapper.map(cancelados);
+        List<Agendamento> efetivadosMapped = AgendamentoMapper.map(efetivados);
+
+        log.info(" >>> Retornando lista de Agendamentos de Pet com sucesso.");
+        return MeusAgendamentos.builder()
+                .pendentes(pendentesMapped)
+                .cancelados(canceladosMapped)
+                .efetivados(efetivadosMapped)
+                .build();
     }
 
     private void validarHorarioEmpresa(LocalDateTime inicio,

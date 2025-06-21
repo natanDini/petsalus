@@ -13,7 +13,6 @@ import java.util.Set;
 
 public interface ServicoAgendaEmpregadoRepository extends JpaRepository<ServicoAgendaEmpregado, Long> {
 
-    // ServicoAgendaEmpregadoRepository
     @Query("""
    select sae
      from ServicoAgendaEmpregado sae
@@ -26,6 +25,7 @@ public interface ServicoAgendaEmpregadoRepository extends JpaRepository<ServicoA
                                                   @Param("inicio") LocalDateTime inicio,
                                                   @Param("fim") LocalDateTime fim,
                                                   @Param("cancelado") ServicoAgendaStatus cancelado);
+
     @Query("""
        select sae
          from ServicoAgendaEmpregado sae
