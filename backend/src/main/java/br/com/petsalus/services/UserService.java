@@ -1,16 +1,22 @@
 package br.com.petsalus.services;
 
 import br.com.petsalus.dtos.request.UserAdd;
+import br.com.petsalus.dtos.request.UserEdit;
+import br.com.petsalus.dtos.response.PerfilCompleto;
+import br.com.petsalus.dtos.response.PerfilPequeno;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.Endereco;
 import br.com.petsalus.entities.User;
 import br.com.petsalus.enums.UserRole;
 import br.com.petsalus.exceptions.CustomException;
+import br.com.petsalus.mappers.PerfilCompletoMapper;
+import br.com.petsalus.mappers.PerfilPequenoMapper;
 import br.com.petsalus.repositories.UserRepository;
 import br.com.petsalus.utils.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -64,5 +70,48 @@ public class UserService {
 
         log.info(" >>> Foto registrada com sucesso.");
         return retornoService.retornoSucesso("Foto registrada com sucesso.");
+    }
+
+    public PerfilPequeno perfilPequeno(Jwt jwt) throws CustomException {
+
+        User user = userUtils.findByJwt(jwt);
+
+        log.info(" >>> Retornando perfil pequeno com sucesso.");
+        return PerfilPequenoMapper.map(user);
+    }
+
+    public PerfilCompleto perfilCompleto(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+
+        User user = userUtils.findByJwt(jwt);
+
+        log.info(" >>> Retornando perfil completo com sucesso.");
+        return PerfilCompletoMapper.map(user);
+    }
+
+    public ResponseEntity<Retorno> deletar(Jwt jwt) throws CustomException {
+
+        User user = userUtils.findByJwt(jwt);
+
+        userRepository.delete(user);
+
+        log.info(" >>> User/Conta deletado com sucesso.");
+        return retornoService.retornoSucesso("User deletado com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> editar(Jwt jwt, UserEdit userEdit) throws CustomException {
+
+        User user = userUtils.findByJwt(jwt);
+
+        Endereco endereco = enderecoService.editar(user.getEndereco().getId(), userEdit.endereco());
+
+        user.setEndereco(endereco);
+        user.setNome(userEdit.nome());
+        user.setEmail(userEdit.email());
+        user.setTelefone(userEdit.telefone());
+
+        userRepository.save(user);
+
+        log.info(" >>> User editado com sucesso.");
+        return retornoService.retornoSucesso("User editado com sucesso.");
     }
 }

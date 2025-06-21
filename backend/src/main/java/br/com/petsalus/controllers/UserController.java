@@ -1,6 +1,10 @@
 package br.com.petsalus.controllers;
 
+import br.com.petsalus.dtos.request.EmpresaAdd;
 import br.com.petsalus.dtos.request.UserAdd;
+import br.com.petsalus.dtos.request.UserEdit;
+import br.com.petsalus.dtos.response.PerfilCompleto;
+import br.com.petsalus.dtos.response.PerfilPequeno;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.services.UserService;
@@ -37,7 +41,35 @@ public class UserController {
     @PostMapping("/upload-foto")
     public ResponseEntity<Retorno> uploadFoto(@RequestParam MultipartFile foto, @AuthenticationPrincipal Jwt jwt)
             throws CustomException, IOException {
-        log.info(" >>> Um Usuário está tentando alterar sua foto de perfil na aplicação");
+        log.info(" >>> Um Usuário está tentando alterar sua foto de perfil na aplicação.");
         return userService.uploadFoto(foto, jwt);
+    }
+
+    @Operation(summary = "Perfil - Pequeno", description = "Este endpoint serve para retornar perfil pequeno de usuário.")
+    @GetMapping("/perfil-pequeno")
+    public PerfilPequeno perfilPequeno(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+        log.info(" >>> Tentando retornar perfil pequeno de um usuário.");
+        return userService.perfilPequeno(jwt);
+    }
+
+    @Operation(summary = "Perfil - Completo", description = "Este endpoint serve para retornar perfil completo de usuário.")
+    @GetMapping("/perfil-completo")
+    public PerfilCompleto perfilCompleto(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+        log.info(" >>> Tentando retornar perfil completo de um usuário.");
+        return userService.perfilCompleto(jwt);
+    }
+
+    @Operation(summary = "Deletar User", description = "Este endpoint serve para deletar um User/Conta.")
+    @DeleteMapping("/deletar")
+    public ResponseEntity<Retorno> deletar(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+        log.info(" >>> Tentando deletar uma Empresa.");
+        return userService.deletar(jwt);
+    }
+
+    @Operation(summary = "Editar User", description = "Este endpoint serve para editar um User/Conta.")
+    @PutMapping("/editar")
+    public ResponseEntity<Retorno> editar(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid UserEdit userEdit) throws CustomException {
+        log.info(" >>> Tentando editar uma Empresa.");
+        return userService.editar(jwt, userEdit);
     }
 }
