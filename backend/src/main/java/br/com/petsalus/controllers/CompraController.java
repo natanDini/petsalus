@@ -1,6 +1,7 @@
 package br.com.petsalus.controllers;
 
 import br.com.petsalus.dtos.request.CompraAdd;
+import br.com.petsalus.dtos.response.MinhasCompras;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.services.CompraService;
@@ -11,10 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,5 +30,12 @@ public class CompraController {
     public ResponseEntity<Retorno> comprar(@AuthenticationPrincipal Jwt jwt, @RequestBody CompraAdd compraAdd) throws CustomException {
         log.info(" >>> Tentando comprar meu carrinho.");
         return compraService.comprar(jwt, compraAdd);
+    }
+
+    @Operation(summary = "Minhas Compras", description = "Este endpoint serve para retornar compras de um Usuário.")
+    @GetMapping("/minhas-compras")
+    public List<MinhasCompras> minhasCompras(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+        log.info(" >>> Tentando retornar compras de um Usuário.");
+        return compraService.minhasCompras(jwt);
     }
 }

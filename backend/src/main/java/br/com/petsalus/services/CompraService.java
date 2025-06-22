@@ -1,15 +1,15 @@
 package br.com.petsalus.services;
 
 import br.com.petsalus.dtos.request.CompraAdd;
+import br.com.petsalus.dtos.response.MinhasCompras;
 import br.com.petsalus.dtos.response.Retorno;
-import br.com.petsalus.entities.Carrinho;
-import br.com.petsalus.entities.Compra;
-import br.com.petsalus.entities.Endereco;
-import br.com.petsalus.entities.User;
+import br.com.petsalus.entities.*;
 import br.com.petsalus.enums.CompraStatus;
 import br.com.petsalus.exceptions.CustomException;
+import br.com.petsalus.mappers.MeusProdutosComprasMapper;
 import br.com.petsalus.repositories.CarrinhoRepository;
 import br.com.petsalus.repositories.CompraRepository;
+import br.com.petsalus.repositories.ItemCompraRepository;
 import br.com.petsalus.utils.CustomExceptionUtils;
 import br.com.petsalus.utils.UserUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,9 +37,10 @@ public class CompraService {
     private final CarrinhoService carrinhoService;
     private final ItemCompraService itemCompraService;
 
+    private final ProdutoService produtoService;
     private final CompraRepository compraRepository;
     private final CarrinhoRepository carrinhoRepository;
-    private final ProdutoService produtoService;
+    private final ItemCompraRepository itemCompraRepository;
 
     public ResponseEntity<Retorno> comprar(Jwt jwt, CompraAdd compraAdd) throws CustomException {
 
@@ -84,5 +87,33 @@ public class CompraService {
 
         log.info(" >>> Compra realizada com sucesso.");
         return retornoService.retornoSucesso("Compra realizada com sucesso.");
+    }
+
+    public List<MinhasCompras> minhasCompras(Jwt jwt) throws CustomException {
+
+        User user = userUtils.findByJwt(jwt);
+
+        List<Compra> compras = compraRepository.findByTutorOrderByDataHoraDesc(user);
+
+        List<MinhasCompras> minhasCompras = new ArrayList<>();
+
+        for (Compra compra : compras) {
+
+            List<ItemCompra> produtos = itemCompraRepository.findByCompra(compra);
+
+            minhasCompras.add(MinhasCompras.builder()
+                            .id(compra.getId())
+                            .dataHora(compra.getDataHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                            .valorTotal(MeusProdutosComprasMapper.formatarPreco(compra.getValorTotal()))
+                            .retirarNaLoja(compra.isRetirarNaLoja())
+                            .receberNoMeuEndereco(compra.isReceberNoMeuEndereco())
+                            .compraStatus(compra.getStatus())
+                            .endereco(compra.getEndereco())
+                            .produtos(MeusProdutosComprasMapper.map(produtos))
+                    .build());
+        }
+
+        log.info(" >>> Retornando minhas compras.");
+        return minhasCompras;
     }
 }
