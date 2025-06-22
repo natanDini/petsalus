@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -59,7 +60,7 @@ public class UserService {
         return retornoService.retornoSucesso("User registrado com sucesso.");
     }
 
-    public ResponseEntity<Retorno> uploadFoto(MultipartFile foto, Jwt jwt)
+    public String uploadFoto(MultipartFile foto, Jwt jwt)
             throws CustomException, IOException {
 
         User user = userUtils.findByJwt(jwt);
@@ -68,8 +69,10 @@ public class UserService {
 
         userRepository.save(user);
 
+        String fotoBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(foto.getBytes());
+
         log.info(" >>> Foto registrada com sucesso.");
-        return retornoService.retornoSucesso("Foto registrada com sucesso.");
+        return fotoBase64;
     }
 
     public PerfilPequeno perfilPequeno(Jwt jwt) throws CustomException {
