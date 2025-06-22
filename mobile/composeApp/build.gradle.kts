@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     kotlin("plugin.serialization") version "2.0.0"
+
 }
 
 kotlin {
@@ -50,6 +51,9 @@ kotlin {
             implementation("io.ktor:ktor-client-content-negotiation:2.3.2")
             implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.2")
             implementation("io.ktor:ktor-client-logging:2.3.2")
+            implementation ("io.coil-kt:coil-compose:2.4.0")
+            implementation ("io.coil-kt:coil-svg:2.4.0")
+
 
         }
         commonTest.dependencies {

@@ -1,38 +1,35 @@
 package org.example.project.ui.screens
 
+import android.content.Context
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.example.network.KtorClient
+import org.example.project.service.UserService
+import org.example.project.utils.ImageUtils
+import java.io.File
+import java.io.InputStream
+import androidx.compose.ui.graphics.Brush
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,8 +40,20 @@ fun PerfilScreen(navController: NavController) {
 
     var nome by remember { mutableStateOf("") }
     var idade by remember { mutableStateOf("") }
-    var fotoPerfil by remember { mutableStateOf(false) }
-    var fotoPet by remember { mutableStateOf(false) }
+    var base64Image by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val userService = UserService(KtorClient.httpClient)
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            uri?.let {
+                uploadImage(context, it, userService) { responseBase64 ->
+                    base64Image = responseBase64
+                }
+            }
+        }
+    )
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -67,86 +76,77 @@ fun PerfilScreen(navController: NavController) {
                     color = Color.White
                 )
 
-                // Foto de perfil
                 Box(
                     modifier = Modifier
                         .size(120.dp)
-                        .background(
-                            if (fotoPerfil) Color.White.copy(alpha = 0.3f) else Color.White.copy(alpha = 0.15f),
-                            shape = CircleShape
-                        )
-                        .clickable { fotoPerfil = true },
+                        .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
+                        .clickable { imagePickerLauncher.launch("image/*") },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Adicionar Foto",
-                        tint = Color.White,
-                        modifier = Modifier.size(64.dp)
-                    )
+                    if (base64Image != null) {
+                        val imageBitmap = ImageUtils.decodeBase64ToImageBitmap(base64Image!!)
+                        Image(
+                            bitmap = imageBitmap,
+                            contentDescription = "Foto Perfil",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Adicionar Foto",
+                            tint = Color.White,
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
                 }
 
-                // Campo Nome
-                TextField(
+                OutlinedTextField(
                     value = nome,
                     onValueChange = { nome = it },
                     placeholder = { Text("Nome") },
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(16.dp)
                 )
 
-                // Campo Idade
-                TextField(
+                OutlinedTextField(
                     value = idade,
                     onValueChange = { idade = it },
                     placeholder = { Text("Idade") },
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(16.dp)
                 )
 
-
-                // Foto do pet
-                Box(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .background(
-                            if (fotoPet) Color.White.copy(alpha = 0.3f) else Color.White.copy(alpha = 0.15f),
-                            shape = CircleShape
-                        )
-                        .clickable { fotoPet = true },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Adicionar Foto do Pet",
-                        tint = Color.White,
-                        modifier = Modifier.size(64.dp)
-                    )
-                }
-
-                // Botão Salvar
                 Button(
-                    onClick = {
-                        // ação para salvar perfil
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White
-                    ),
+                    onClick = { /* salvar perfil backend */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
+                    modifier = Modifier.fillMaxWidth().height(50.dp)
                 ) {
                     Text("Salvar Perfil", color = Color.Black)
                 }
             }
         }
+    }
+}
+
+fun uploadImage(
+    context: Context,
+    uri: Uri,
+    userService: UserService,
+    onResponse: (String?) -> Unit
+) {
+    val contentResolver = context.contentResolver
+    val inputStream: InputStream? = contentResolver.openInputStream(uri)
+    val tempFile = File.createTempFile("upload", ".jpg", context.cacheDir)
+
+    inputStream?.use { input -> tempFile.outputStream().use { input.copyTo(it) } }
+
+    CoroutineScope(Dispatchers.IO).launch {
+        val responseBase64 = userService.uploadPhoto(tempFile)
+        onResponse(responseBase64)
     }
 }

@@ -1,7 +1,10 @@
 package org.example.project.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -17,14 +20,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.image
+import kotlinproject.composeapp.generated.resources.PETSALUS
+import org.example.project.network.LoginRequest
+import org.example.project.ui.BeigeLight
+import org.example.project.ui.BlueAccent
+import org.example.project.ui.CoralDark
+import org.example.project.ui.OrangeLight
+import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,20 +50,17 @@ fun MenuScreen(navController: NavController) {
     val gradient = Brush.verticalGradient(
         colors = listOf(
             MaterialTheme.colorScheme.primary,     // OrangeStrong (#F29422)
-            MaterialTheme.colorScheme.secondary    // CoralDark (#8C0335)
+            BeigeLight    // CoralDark (#8C0335)
         )
     )
 
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    val cards = listOf(
-        CardData("Promoção 1", "Descrição da promoção 1"),
-        CardData("Promoção 2", "Descrição da promoção 2"),
-        CardData("Promoção 3", "Descrição da promoção 3"),
-
+    val gradientBrush = Brush.horizontalGradient(
+        colors = listOf(CoralDark, BlueAccent) // Exemplo: DarkCoral -> LightYellow
     )
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -116,6 +131,55 @@ fun MenuScreen(navController: NavController) {
                             .align(Alignment.CenterHorizontally),
                         contentScale = ContentScale.Fit
                     )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                            .clickable {
+                            // Ação ao clicar
+                            println("Card clicado!")
+                        },
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f)
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = buildAnnotatedString {
+                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                                            append("Não cadastrou seu pet ainda?")
+                                        }
+                                    },
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+
+
+
+                                Text(
+                                    text = buildAnnotatedString {
+                                        withStyle(style = SpanStyle(brush = gradientBrush)) {
+                                            append("Cadastre o seu melhor amigo agora!")
+                                        }
+                                    },
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+
+                            }
+                        }
+                    }
+
+
+
 
                     OutlinedTextField(
                         value = searchQuery,
@@ -146,12 +210,19 @@ fun MenuScreen(navController: NavController) {
                         )
                     )
 
+
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        items(cards) { card ->
-                            PromoCard(card)
+                        item {
+                            PromoCard(CardData("Promoção 1", "Descrição da promoção 1"))
+                        }
+                        item {
+                            PromoCard(CardData("Promoção 2", "Descrição da promoção 2"))
+                        }
+                        item {
+                            PromoCard(CardData("Promoção 3", "Descrição da promoção 3"))
                         }
                     }
 
@@ -175,13 +246,7 @@ fun MenuScreen(navController: NavController) {
                         RoundIcon(Icons.Default.Settings, "Configurações")
                     }
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        cards.forEach { card ->
-                            PromoCard(card)
-                        }
-                    }
+
                 }
             }
         }
@@ -189,7 +254,7 @@ fun MenuScreen(navController: NavController) {
 }
 
 @Composable
-fun DrawerMenuItem(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, onClick: () -> Unit) {
+fun DrawerMenuItem(icon: ImageVector, label: String, onClick: () -> Unit) {
     NavigationDrawerItem(
         icon = { Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onBackground) },
         label = { Text(label, color = MaterialTheme.colorScheme.onBackground) },
@@ -200,7 +265,7 @@ fun DrawerMenuItem(icon: androidx.compose.ui.graphics.vector.ImageVector, label:
 }
 
 @Composable
-fun RoundIcon(icon: androidx.compose.ui.graphics.vector.ImageVector, description: String) {
+fun RoundIcon(icon: ImageVector, description: String) {
     Box(
         modifier = Modifier
             .size(48.dp)
@@ -219,7 +284,7 @@ fun RoundIcon(icon: androidx.compose.ui.graphics.vector.ImageVector, description
 fun PromoCard(card: CardData) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(100.dp)
             .height(120.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
