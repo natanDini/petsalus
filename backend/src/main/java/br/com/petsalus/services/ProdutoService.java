@@ -1,6 +1,7 @@
 package br.com.petsalus.services;
 
 import br.com.petsalus.dtos.request.ProdutoAdd;
+import br.com.petsalus.dtos.request.ProdutoEdit;
 import br.com.petsalus.dtos.response.ProdutoResCliente;
 import br.com.petsalus.dtos.response.ProdutoResEmpresa;
 import br.com.petsalus.dtos.response.Retorno;
@@ -17,8 +18,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -54,6 +58,20 @@ public class ProdutoService {
         return retornoService.retornoSucesso("Produto registrado com sucesso.");
     }
 
+    public String uploadFoto(Long produtoId, MultipartFile foto) throws CustomException, IOException {
+
+        Produto produto = produtoUtils.findById(produtoId);
+
+        produto.setFotoPerfil(foto.getBytes());
+
+        produtoRepository.save(produto);
+
+        String fotoBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(foto.getBytes());
+
+        log.info("Foto de produto registrada com sucesso.");
+        return fotoBase64;
+    }
+
     public List<ProdutoResCliente>getByEmpresaIdClient(Long empresaId) throws CustomException {
 
         Empresa empresa = empresaUtils.findById(empresaId);
@@ -84,6 +102,31 @@ public class ProdutoService {
 
         log.info(" >>> Adicionando estoque com sucesso.");
         return retornoService.retornoSucesso("Adicionando estoque com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> deletar(Long produtoId) throws CustomException {
+
+        Produto produto = produtoUtils.findById(produtoId);
+
+        produtoRepository.delete(produto);
+
+        log.info(" >>> Produto deletado com sucesso.");
+        return retornoService.retornoSucesso("Produto deletado com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> editar(Long produtoId, ProdutoEdit produtoEdit) throws CustomException {
+
+        Produto produto = produtoUtils.findById(produtoId);
+
+        produto.setNome(produtoEdit.nome());
+        produto.setPreco(produtoEdit.preco());
+        produto.setDisponivel(produtoEdit.disponivel());
+        produto.setDescricao(produtoEdit.descricao());
+
+        produtoRepository.save(produto);
+
+        log.info(" >>> Produto editado com sucesso.");
+        return retornoService.retornoSucesso("Produto editado com sucesso.");
     }
 
     public void atualizarProdutosVendidos(List<Carrinho> produtos) throws CustomException {

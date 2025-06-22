@@ -2,6 +2,8 @@ package br.com.petsalus.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -29,5 +31,6 @@ public class ItemCompra {
 
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Produto produto;
 }

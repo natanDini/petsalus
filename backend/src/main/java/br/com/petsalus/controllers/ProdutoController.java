@@ -1,6 +1,7 @@
 package br.com.petsalus.controllers;
 
 import br.com.petsalus.dtos.request.ProdutoAdd;
+import br.com.petsalus.dtos.request.ProdutoEdit;
 import br.com.petsalus.dtos.response.ProdutoResCliente;
 import br.com.petsalus.dtos.response.ProdutoResEmpresa;
 import br.com.petsalus.dtos.response.Retorno;
@@ -12,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +32,14 @@ public class ProdutoController {
     public ResponseEntity<Retorno> registrar(@PathVariable Long empresaId, @RequestBody ProdutoAdd produtoAdd) throws CustomException {
         log.info(" >>> Tentando registrar um novo Produto.");
         return produtoService.registrar(empresaId, produtoAdd);
+    }
+
+    @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de produto.")
+    @PostMapping("/upload-foto/{produtoId}")
+    public String uploadFoto(@PathVariable Long produtoId, @RequestParam MultipartFile foto)
+            throws CustomException, IOException {
+        log.info(" >>> Um Usuário está tentando alterar a foto de seu produto.");
+        return produtoService.uploadFoto(produtoId, foto);
     }
 
     @Operation(summary = "Produtos byEmpresa pra Cliente", description = "Este endpoint serve para retornar Produtos de uma empresa para um cliente.")
@@ -50,5 +61,19 @@ public class ProdutoController {
     public ResponseEntity<Retorno> addEstoque(@PathVariable Long produtoId, @RequestParam Long qtdAddEstoque) throws CustomException {
         log.info(" >>> Tentando adicionar estoque de um produto pelo id.");
         return produtoService.addEstoque(produtoId, qtdAddEstoque);
+    }
+
+    @Operation(summary = "Deletar Produto", description = "Este endpoint serve para deletar um Produto.")
+    @DeleteMapping("/deletar/{produtoId}")
+    public ResponseEntity<Retorno> deletar(@PathVariable Long produtoId) throws CustomException {
+        log.info(" >>> Tentando deletar um Produto.");
+        return produtoService.deletar(produtoId);
+    }
+
+    @Operation(summary = "Editar Produto", description = "Este endpoint serve para editar um Produto.")
+    @PutMapping("/editar/{produtoId}")
+    public ResponseEntity<Retorno> editar(@PathVariable Long produtoId, @RequestBody ProdutoEdit produtoEdit) throws CustomException {
+        log.info(" >>> Tentando editar um novo Produto.");
+        return produtoService.editar(produtoId, produtoEdit);
     }
 }
