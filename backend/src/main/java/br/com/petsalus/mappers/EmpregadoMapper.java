@@ -1,6 +1,6 @@
 package br.com.petsalus.mappers;
 
-import br.com.petsalus.dtos.response.PerfilPequeno;
+import br.com.petsalus.dtos.response.Empregado;
 import br.com.petsalus.entities.User;
 import lombok.experimental.UtilityClass;
 
@@ -9,24 +9,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
-public class PerfilPequenoMapper {
+public class EmpregadoMapper {
 
-    public PerfilPequeno map(User user) {
+    public Empregado map(User user) {
 
         String fotoBase64 = user.getFotoPerfil() != null
                 ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(user.getFotoPerfil())
                 : null;
 
-        return PerfilPequeno.builder()
+        return Empregado.builder()
                 .id(user.getId())
+                .cpf(user.getCpf())
                 .nome(user.getNome())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .telefone(user.getTelefone())
+                .userRole(user.getUserRole())
+                .endereco(user.getEndereco())
                 .fotoPerfil(fotoBase64)
                 .build();
     }
 
-    public static List<PerfilPequeno> map(List<User> users) {
+    public static List<Empregado> map(List<User> users) {
         return users.stream()
-                .map(PerfilPequenoMapper::map)
+                .map(EmpregadoMapper::map)
                 .collect(Collectors.toList());
     }
 }

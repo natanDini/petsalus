@@ -1,5 +1,6 @@
 package br.com.petsalus.repositories;
 
+import br.com.petsalus.entities.ServicoAgenda;
 import br.com.petsalus.entities.ServicoAgendaEmpregado;
 import br.com.petsalus.entities.User;
 import br.com.petsalus.enums.ServicoAgendaStatus;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -40,4 +42,17 @@ public interface ServicoAgendaEmpregadoRepository extends JpaRepository<ServicoA
             @Param("inicioRequerido") LocalDateTime inicio,
             @Param("fimRequerido") LocalDateTime fim,
             @Param("cancelado") ServicoAgendaStatus cancelado);
+
+    @Query("""
+    SELECT DISTINCT sae.servicoAgenda
+    FROM ServicoAgendaEmpregado sae
+    WHERE sae.empregado = :empregado
+    AND sae.servicoAgenda.dataHora BETWEEN :start AND :end
+    ORDER BY sae.servicoAgenda.dataHora ASC
+    """)
+    List<ServicoAgenda> findAgendamentoByEmpregadoAndData(
+            @Param("empregado") User empregado,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
