@@ -37,6 +37,7 @@ public class CompraService {
 
     private final CompraRepository compraRepository;
     private final CarrinhoRepository carrinhoRepository;
+    private final ProdutoService produtoService;
 
     public ResponseEntity<Retorno> comprar(Jwt jwt, CompraAdd compraAdd) throws CustomException {
 
@@ -76,6 +77,8 @@ public class CompraService {
         compraRepository.save(compra);
 
         itemCompraService.salvar(compra, produtos);
+
+        produtoService.atualizarProdutosVendidos(produtos);
 
         carrinhoService.deletar(jwt);
 

@@ -38,7 +38,7 @@ public class PetController {
 
     @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de pet.")
     @PostMapping("/upload-foto/{petId}")
-    public ResponseEntity<Retorno> uploadFoto(@PathVariable Long petId, @RequestParam MultipartFile foto)
+    public String uploadFoto(@PathVariable Long petId, @RequestParam MultipartFile foto)
             throws CustomException, IOException {
         log.info(" >>> Um Usuário está tentando alterar a foto de seu pet.");
         return petService.uploadFoto(petId, foto);

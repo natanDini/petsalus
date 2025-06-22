@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -62,7 +63,7 @@ public class PetService {
         return retornoService.retornoSucesso("Pet registrado com sucesso.");
     }
 
-    public ResponseEntity<Retorno> uploadFoto(Long petId, MultipartFile foto) throws CustomException, IOException {
+    public String uploadFoto(Long petId, MultipartFile foto) throws CustomException, IOException {
 
         Pet pet = petUtils.findById(petId);
 
@@ -70,8 +71,10 @@ public class PetService {
 
         petRepository.save(pet);
 
+        String fotoBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(foto.getBytes());
+
         log.info("Foto de pet registrada com sucesso.");
-        return retornoService.retornoSucesso("Foto de pet registrada com sucesso.");
+        return fotoBase64;
     }
 
     public PetRes getById(Long petId) throws CustomException {

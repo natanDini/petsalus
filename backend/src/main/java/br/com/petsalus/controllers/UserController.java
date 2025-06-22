@@ -1,6 +1,5 @@
 package br.com.petsalus.controllers;
 
-import br.com.petsalus.dtos.request.EmpresaAdd;
 import br.com.petsalus.dtos.request.UserAdd;
 import br.com.petsalus.dtos.request.UserEdit;
 import br.com.petsalus.dtos.response.PerfilCompleto;
@@ -39,7 +38,7 @@ public class UserController {
 
     @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de usuário logado.")
     @PostMapping("/upload-foto")
-    public ResponseEntity<Retorno> uploadFoto(@RequestParam MultipartFile foto, @AuthenticationPrincipal Jwt jwt)
+    public String uploadFoto(@RequestParam MultipartFile foto, @AuthenticationPrincipal Jwt jwt)
             throws CustomException, IOException {
         log.info(" >>> Um Usuário está tentando alterar sua foto de perfil na aplicação.");
         return userService.uploadFoto(foto, jwt);
