@@ -40,6 +40,7 @@ import java.io.InputStream
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shadow
 import kotlinx.coroutines.flow.collectLatest
+import org.example.project.model.PerfilCompleto
 import org.example.project.utils.ImageUtils
 
 
@@ -56,15 +57,16 @@ fun PerfilScreen(navController: NavController) {
     var base64Image by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current
-    val userService = UserService(KtorClient.httpClient)
-    val tokenStorage: TokenStorage = remember { TokenStorage(context) }
-    var token by remember { mutableStateOf<String?>(null) }
+    val tokenStorage = remember { TokenStorage(context) }
+    val token by tokenStorage.tokenFlow.collectAsState(initial = null)
 
-    LaunchedEffect(Unit) {
-        tokenStorage.tokenFlow.collectLatest { token = it }
-    }
+    val userService = remember { UserService(KtorClient.httpClient) }
+
+    var perfil by remember { mutableStateOf<PerfilCompleto?>(null) }
+
 
     LaunchedEffect(token) {
+        println("Token recebido no PerfilScreen: $token")
         token?.let {
             val perfil = userService.getPerfilCompleto(it)
             perfil?.let { p ->
@@ -117,7 +119,13 @@ fun PerfilScreen(navController: NavController) {
                 modifier = Modifier
                     .size(160.dp)
                     .clip(CircleShape)
-                    .clickable { imagePickerLauncher.launch("image/*") }
+                    .clickable {
+                        if (token != null) {
+                            imagePickerLauncher.launch("image/*")
+                        } else {
+                            println("Token está nulo, não pode abrir o picker")
+                        }
+                    }
                     .border(2.dp, Color.White, CircleShape)
                     .shadow(10.dp, CircleShape),
                 contentAlignment = Alignment.Center

@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.example.network.KtorClient
-import org.example.project.network.CadastroRequest
-import org.example.project.network.Endereco
+import org.example.project.model.CadastroRequest
+import org.example.project.model.Endereco
 import org.example.project.ui.CoralDark
 import org.example.project.ui.OrangeStrong
 import org.example.project.ui.OrangeLight

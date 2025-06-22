@@ -22,11 +22,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.ui.platform.LocalContext
+
 import org.jetbrains.compose.resources.painterResource
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.image
 import kotlinx.coroutines.launch
 import org.example.network.KtorClient
+import org.example.project.content.TokenStorage
 import org.example.project.network.LoginRequest
 import org.example.project.ui.BeigeLight
 import org.example.project.ui.BlueAccent
@@ -40,6 +43,8 @@ fun LoginScreen(navController: NavController) {
     var username by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     val colors = MaterialTheme.colorScheme
+    val context = LocalContext.current
+    val tokenStorage = remember { TokenStorage(context) }
 
     // Animação do gradiente
     val transition = rememberInfiniteTransition(label = "gradient")
@@ -152,6 +157,7 @@ fun LoginScreen(navController: NavController) {
                             val loginResponse = KtorClient.apiService.login(LoginRequest(username, senha))
                             if (loginResponse != null) {
                                 println("Token recebido: ${loginResponse.token}")
+                                tokenStorage.saveToken(loginResponse.token)
                                 navController.navigate("menu")
                             } else {
                                 println("Falha no login.")
