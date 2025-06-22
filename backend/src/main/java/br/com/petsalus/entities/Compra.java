@@ -1,6 +1,5 @@
 package br.com.petsalus.entities;
 
-import br.com.petsalus.enums.CompraStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,10 +26,6 @@ public class Compra {
 
     @Column
     private boolean receberNoMeuEndereco;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private CompraStatus status;
 
     @ManyToOne
     @JoinColumn(name = "tutor_id", nullable = false)

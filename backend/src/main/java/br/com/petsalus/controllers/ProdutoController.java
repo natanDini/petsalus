@@ -63,6 +63,20 @@ public class ProdutoController {
         return produtoService.addEstoque(produtoId, qtdAddEstoque);
     }
 
+    @Operation(summary = "Indisponível produtoById", description = "Este endpoint serve para indisponibilizar um produto pelo id.")
+    @PatchMapping("/indisponibilizar/{produtoId}")
+    public ResponseEntity<Retorno> indisponibilizar(@PathVariable Long produtoId) throws CustomException {
+        log.info(" >>> Tentando indisponibilizar um produto pelo id.");
+        return produtoService.indisponibilizar(produtoId);
+    }
+
+    @Operation(summary = "Disponível produtoById", description = "Este endpoint serve para disponibilizar um produto pelo id.")
+    @PatchMapping("/disponibilizar/{produtoId}")
+    public ResponseEntity<Retorno> disponibilizar(@PathVariable Long produtoId) throws CustomException {
+        log.info(" >>> Tentando disponibilizar um produto pelo id.");
+        return produtoService.disponibilizar(produtoId);
+    }
+
     @Operation(summary = "Deletar Produto", description = "Este endpoint serve para deletar um Produto.")
     @DeleteMapping("/deletar/{produtoId}")
     public ResponseEntity<Retorno> deletar(@PathVariable Long produtoId) throws CustomException {

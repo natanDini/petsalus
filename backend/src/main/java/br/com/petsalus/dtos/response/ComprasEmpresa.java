@@ -6,13 +6,15 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record MinhasCompras (
+public record ComprasEmpresa (
         Long id,
         String dataHora,
         String valorTotal,
         boolean retirarNaLoja,
         boolean receberNoMeuEndereco,
+        String comprador,
+        String cpfComprador,
         Endereco endereco,
-        List<MeusProdutosCompras> produtos
+        List<ProdutosComprasEmpresa> produtos
 ){
 }

@@ -1,6 +1,7 @@
 package br.com.petsalus.controllers;
 
 import br.com.petsalus.dtos.request.CompraAdd;
+import br.com.petsalus.dtos.response.ComprasEmpresa;
 import br.com.petsalus.dtos.response.MinhasCompras;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.exceptions.CustomException;
@@ -37,5 +38,12 @@ public class CompraController {
     public List<MinhasCompras> minhasCompras(@AuthenticationPrincipal Jwt jwt) throws CustomException {
         log.info(" >>> Tentando retornar compras de um Usuário.");
         return compraService.minhasCompras(jwt);
+    }
+
+    @Operation(summary = "Compras byEmpresaId", description = "Este endpoint serve para retornar compras de uma empresaId.")
+    @GetMapping("/{empresaId}/compras")
+    public List<ComprasEmpresa> comprasEmpresa(@PathVariable Long empresaId) throws CustomException {
+        log.info(" >>> Tentando retornar compras de uma empresa.");
+        return compraService.comprasEmpresa(empresaId);
     }
 }

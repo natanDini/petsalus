@@ -104,6 +104,30 @@ public class ProdutoService {
         return retornoService.retornoSucesso("Adicionando estoque com sucesso.");
     }
 
+    public ResponseEntity<Retorno> indisponibilizar(Long produtoId) throws CustomException {
+
+        Produto produto = produtoUtils.findById(produtoId);
+
+        produto.setDisponivel(false);
+
+        produtoRepository.save(produto);
+
+        log.info(" >>> Indisponibilizando produto com sucesso.");
+        return retornoService.retornoSucesso("Indisponibilizando produto com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> disponibilizar(Long produtoId) throws CustomException {
+
+        Produto produto = produtoUtils.findById(produtoId);
+
+        produto.setDisponivel(true);
+
+        produtoRepository.save(produto);
+
+        log.info(" >>> Disponibilizando produto com sucesso.");
+        return retornoService.retornoSucesso("Disponibilizando produto com sucesso.");
+    }
+
     public ResponseEntity<Retorno> deletar(Long produtoId) throws CustomException {
 
         Produto produto = produtoUtils.findById(produtoId);
