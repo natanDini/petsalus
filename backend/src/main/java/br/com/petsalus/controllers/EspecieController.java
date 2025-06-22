@@ -1,21 +1,19 @@
 package br.com.petsalus.controllers;
 
 import br.com.petsalus.dtos.request.EspecieAdd;
-import br.com.petsalus.dtos.request.UserAdd;
 import br.com.petsalus.dtos.response.Retorno;
+import br.com.petsalus.entities.Especie;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.services.EspecieService;
-import br.com.petsalus.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,5 +29,12 @@ public class EspecieController {
     public ResponseEntity<Retorno> registrar(@RequestBody @Valid EspecieAdd especieAdd) throws CustomException {
         log.info(" >>> Tentando registrar uma nova Espécie.");
         return especieService.registrar(especieAdd);
+    }
+
+    @Operation(summary = "Espécie getAll", description = "Este endpoint serve para retornar todas as espécies.")
+    @GetMapping
+    public List<Especie> getAll() throws CustomException {
+        log.info(" >>> Tentando retornar todas as espécies.");
+        return especieService.getAll();
     }
 }

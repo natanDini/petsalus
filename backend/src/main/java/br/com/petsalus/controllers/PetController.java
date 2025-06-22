@@ -33,7 +33,7 @@ public class PetController {
     @PostMapping("/registrar")
     public ResponseEntity<Retorno> registrar(@RequestBody @Valid PetAdd petAdd, @AuthenticationPrincipal Jwt jwt) throws CustomException {
         log.info(" >>> Tentando registrar um novo Pet.");
-        return petService.resgistrar(petAdd, jwt);
+        return petService.registrar(petAdd, jwt);
     }
 
     @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de pet.")

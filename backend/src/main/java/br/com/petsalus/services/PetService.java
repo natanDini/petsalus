@@ -38,7 +38,7 @@ public class PetService {
 
     private final PetRepository petRepository;
 
-    public ResponseEntity<Retorno> resgistrar(PetAdd petAdd, Jwt jwt){
+    public ResponseEntity<Retorno> registrar(PetAdd petAdd, Jwt jwt){
 
         User user = userUtils.findByJwt(jwt);
 

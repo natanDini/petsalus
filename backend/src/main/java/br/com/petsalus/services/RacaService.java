@@ -1,15 +1,20 @@
 package br.com.petsalus.services;
 
 import br.com.petsalus.dtos.request.RacaAdd;
+import br.com.petsalus.dtos.response.RacaRes;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.Especie;
 import br.com.petsalus.entities.Raca;
+import br.com.petsalus.exceptions.CustomException;
+import br.com.petsalus.mappers.RacaResMapper;
 import br.com.petsalus.repositories.RacaRepository;
 import br.com.petsalus.utils.EspecieUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -34,6 +39,16 @@ public class RacaService {
 
         log.info("Raça registrada com sucesso.");
         return retornoService.retornoSucesso("Raça registrada com sucesso.");
+    }
+
+    public List<RacaRes> getByEspecieId(Long especieId) throws CustomException {
+
+        Especie especie = especieUtils.findById(especieId);
+
+        List<Raca> racas = racaRepository.findByEspecie(especie);
+
+        log.info(" >>> Listando raças com sucesso.");
+        return RacaResMapper.map(racas);
     }
 
     public void salvarSRD(Especie especie) {

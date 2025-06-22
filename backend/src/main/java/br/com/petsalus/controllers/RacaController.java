@@ -1,7 +1,7 @@
 package br.com.petsalus.controllers;
 
 import br.com.petsalus.dtos.request.RacaAdd;
-import br.com.petsalus.dtos.request.UserAdd;
+import br.com.petsalus.dtos.response.RacaRes;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.services.RacaService;
@@ -11,10 +11,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,5 +29,12 @@ public class RacaController {
     public ResponseEntity<Retorno> registrar(@RequestBody @Valid RacaAdd racaAdd) throws CustomException {
         log.info(" >>> Tentando registrar uma nova Raça.");
         return racaService.registrar(racaAdd);
+    }
+
+    @Operation(summary = "Raça getByEspecieId", description = "Este endpoint serve para retornar Raças de uma Espécie.")
+    @GetMapping("/especie/{especieId}")
+    public List<RacaRes> getByEspecieId(@PathVariable Long especieId) throws CustomException {
+        log.info(" >>> Tentando retornar Raças de uma Espécie.");
+        return racaService.getByEspecieId(especieId);
     }
 }
