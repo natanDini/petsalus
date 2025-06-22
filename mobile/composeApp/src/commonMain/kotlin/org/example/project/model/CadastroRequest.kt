@@ -1,4 +1,4 @@
-package org.example.project.network
+package org.example.project.model
 
 import kotlinx.serialization.Serializable
 

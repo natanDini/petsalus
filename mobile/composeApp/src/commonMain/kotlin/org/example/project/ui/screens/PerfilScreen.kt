@@ -16,6 +16,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -26,11 +28,17 @@ import kotlinx.coroutines.launch
 import org.example.network.KtorClient
 import org.example.project.service.UserService
 import org.example.project.content.TokenStorage
+import androidx.compose.foundation.border
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.shadow
+
 
 
 import java.io.File
 import java.io.InputStream
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shadow
 import kotlinx.coroutines.flow.collectLatest
 import org.example.project.utils.ImageUtils
 
@@ -38,26 +46,36 @@ import org.example.project.utils.ImageUtils
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(navController: NavController) {
-    val gradient = Brush.verticalGradient(
-        colors = listOf(Color(0xFFFF6F61), Color(0xFFFFA726))
-    )
 
     var nome by remember { mutableStateOf("") }
-    var idade by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var cpf by remember { mutableStateOf("") }
+    var endereco by remember { mutableStateOf("") }
+    var telefone by remember { mutableStateOf("") }
     var base64Image by remember { mutableStateOf<String?>(null) }
+
     val context = LocalContext.current
     val userService = UserService(KtorClient.httpClient)
-
-    // TokenStorage para ler o token salvo
     val tokenStorage: TokenStorage = remember { TokenStorage(context) }
-
     var token by remember { mutableStateOf<String?>(null) }
 
-
-    // Coletar token armazenado no DataStore
     LaunchedEffect(Unit) {
-        tokenStorage.tokenFlow.collectLatest {
-            token = it
+        tokenStorage.tokenFlow.collectLatest { token = it }
+    }
+
+    LaunchedEffect(token) {
+        token?.let {
+            val perfil = userService.getPerfilCompleto(it)
+            perfil?.let { p ->
+                nome = p.nome
+                cpf = p.cpf
+                email = p.email
+                username = p.username
+                telefone = p.telefone
+                endereco = p.endereco.toString()
+                base64Image = p.fotoPerfil
+            }
         }
     }
 
@@ -65,99 +83,119 @@ fun PerfilScreen(navController: NavController) {
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                if (token != null) {
-                    uploadImage(context, it, userService, token!!) { responseBase64 ->
+                token?.let { tkn ->
+                    uploadImage(context, it, userService, tkn) { responseBase64 ->
                         base64Image = responseBase64
                     }
-                } else {
-                    // Token não disponível - tratar aqui caso queira
                 }
             }
         }
     )
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.Transparent
-    ) {
-        Box(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Perfil", style = MaterialTheme.typography.titleSmall) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    titleContentColor = Color.Black
+                )
+            )
+        },
+        containerColor = Color.White
+    ) { paddingValues ->
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(gradient)
-                .padding(24.dp)
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                    text = "Perfil do Usuário",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-                )
 
-                Box(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
-                        .clickable { imagePickerLauncher.launch("image/*") },
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (base64Image != null) {
-                        val imageBitmap = ImageUtils.decodeBase64ToImageBitmap(base64Image!!)
-                        imageBitmap?.let {
-                            Image(
-                                bitmap = it,
-                                contentDescription = "Foto Perfil",
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
-                            )
-                        }
-                    } else {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Adicionar Foto",
-                            tint = Color.White,
-                            modifier = Modifier.size(64.dp)
+            Box(
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(CircleShape)
+                    .clickable { imagePickerLauncher.launch("image/*") }
+                    .border(2.dp, Color.White, CircleShape)
+                    .shadow(10.dp, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                if (base64Image != null) {
+                    val imageBitmap = ImageUtils.decodeBase64ToImageBitmap(base64Image!!)
+                    imageBitmap?.let {
+                        Image(
+                            bitmap = it,
+                            contentDescription = "Foto Perfil",
+                            modifier = Modifier
+                                .size(160.dp)
+                                .clip(CircleShape)
                         )
                     }
-
-                }
-
-                OutlinedTextField(
-                    value = nome,
-                    onValueChange = { nome = it },
-                    placeholder = { Text("Nome") },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
-                )
-
-                OutlinedTextField(
-                    value = idade,
-                    onValueChange = { idade = it },
-                    placeholder = { Text("Idade") },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
-                )
-
-                Button(
-                    onClick = { /* salvar perfil backend */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                    shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
-                ) {
-                    Text("Salvar Perfil", color = Color.Black)
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Adicionar Foto",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(80.dp)
+                    )
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(8.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    PerfilItem("Nome", nome)
+                    PerfilItem("Email", email)
+                    PerfilItem("Username", username)
+                    PerfilItem("CPF", cpf)
+                    PerfilItem("Telefone", telefone)
+                    PerfilItem("Endereço", endereco)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = { navController.navigate("menu")},
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .shadow(8.dp, RoundedCornerShape(20.dp))
+            ) {
+                Text(
+                    "Voltar",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun PerfilItem(label: String, value: String) {
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.Gray
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.Black
+        )
     }
 }
 

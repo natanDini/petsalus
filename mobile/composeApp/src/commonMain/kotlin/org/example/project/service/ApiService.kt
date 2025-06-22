@@ -6,7 +6,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import org.example.project.network.CadastroRequest
+import org.example.project.model.CadastroRequest
 import org.example.project.network.LoginRequest
 import org.example.project.network.LoginResponse
 
