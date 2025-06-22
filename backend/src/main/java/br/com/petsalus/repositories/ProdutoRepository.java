@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-    List<Produto> findByEmpresa(Empresa empresa);
+    List<Produto> findByEmpresaOrderByNomeAsc(Empresa empresa);
     List<Produto> findByEmpresaAndDisponivelIsTrue(Empresa empresa);
 }

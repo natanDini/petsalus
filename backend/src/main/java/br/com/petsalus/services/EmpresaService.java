@@ -80,6 +80,18 @@ public class EmpresaService {
         return retornoService.retornoSucesso("Foto de empresa registrada com sucesso.");
     }
 
+    public List<EmpresaShortRes> minhasEmpresas(Jwt jwt) throws CustomException {
+
+        User dono = userUtils.findByJwt(jwt);
+
+        List<Empresa> empresas = empresaRepository.findByDono(dono);
+
+        emptyUtils.validaListaVazia(empresas, "Nenhuma empresa encontrada.");
+
+        log.info(" >>> Empresas de Dono listadas com sucesso.");
+        return EmpresaShortResMapper.map(empresas);
+    }
+
     public List<EmpresaShortRes> listar() throws CustomException {
 
         List<Empresa> empresas = empresaRepository.findAll();

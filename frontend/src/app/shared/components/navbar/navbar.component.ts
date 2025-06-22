@@ -27,7 +27,6 @@ export class NavbarComponent {
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
   @Input() menuItems: { path: string, title: string, icon?: string }[] = [
     { path: '/', title: 'Home', icon: 'home' },
-    { path: '/about', title: 'Sobre', icon: 'info' },
-    { path: '/contact', title: 'Contato', icon: 'mail' }
+    { path: '/login', title: 'Login', icon: 'login' }
   ];
 }

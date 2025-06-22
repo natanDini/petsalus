@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ServicoRepository extends JpaRepository<Servico, Long> {
 
-    List<Servico> findByEmpresa(Empresa empresa);
+    List<Servico> findByEmpresaOrderByNomeAsc(Empresa empresa);
 
     List<Servico> findByEmpresaAndIsPublicoIsTrue(Empresa empresa);
 }

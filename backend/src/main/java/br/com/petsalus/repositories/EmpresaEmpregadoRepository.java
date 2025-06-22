@@ -17,6 +17,7 @@ public interface EmpresaEmpregadoRepository extends JpaRepository<EmpresaEmprega
     SELECT DISTINCT ee.empregado
     FROM EmpresaEmpregado ee
     WHERE ee.empresa = :empresa
+    ORDER BY ee.empregado.nome ASC
     """)
     List<User> findEmpregadosByEmpresa(@Param("empresa") Empresa empresa);
 
@@ -39,6 +40,8 @@ public interface EmpresaEmpregadoRepository extends JpaRepository<EmpresaEmprega
     boolean existsByEmpregado(User u);
 
     boolean existsByEmpresaAndEmpregado(Empresa e, User u);
+
+    EmpresaEmpregado findByEmpresaAndEmpregado(Empresa e, User u);
 
     List<EmpresaEmpregado> findAllByEmpresa(Empresa empresa);
 }

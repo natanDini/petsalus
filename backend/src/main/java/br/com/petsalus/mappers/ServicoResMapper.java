@@ -18,6 +18,7 @@ public class ServicoResMapper {
     public ServicoRes map(Servico servico) {
 
         return ServicoRes.builder()
+                .id(servico.getId())
                 .nome(servico.getNome())
                 .descricao(servico.getDescricao())
                 .preco(formatarPreco(servico.getPreco()))

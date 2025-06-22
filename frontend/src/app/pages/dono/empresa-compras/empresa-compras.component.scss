@@ -1,0 +1,104 @@
+.compras-container {
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 24px;
+
+  h2 {
+    margin-bottom: 24px;
+    font-size: 22px;
+  }
+
+  .compra-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 24px;
+    background: #fff;
+    align-items: flex-start;
+    position: relative;
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .compra-info,
+    .compra-endereco {
+      flex: 1;
+      min-width: 250px;
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      p {
+        margin: 4px 0;
+        font-size: 14px;
+        color: #444;
+
+        strong {
+          color: #222;
+        }
+      }
+
+      h4 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        font-weight: 600;
+      }
+    }
+
+    .compra-acoes {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+
+      button {
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+
+    .produtos-lista {
+      width: 100%;
+      margin-top: 16px;
+      border-top: 1px dashed #ccc;
+      padding-top: 12px;
+
+      max-height: 280px; // ajustável conforme altura de 3 produtos
+      overflow-y: auto;
+
+      .produto-item {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 6px;
+          object-fit: cover;
+        }
+
+        div {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          p {
+            margin: 2px 0;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}

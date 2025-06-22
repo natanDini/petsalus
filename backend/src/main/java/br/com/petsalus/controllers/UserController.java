@@ -31,9 +31,16 @@ public class UserController {
 
     @Operation(summary = "Registrar User", description = "Este endpoint serve para registrar um novo User.")
     @PostMapping("/registrar")
-    public ResponseEntity<Retorno> registrar(@RequestBody @Valid UserAdd alunoAdd) throws CustomException {
+    public ResponseEntity<Retorno> registrar(@RequestBody @Valid UserAdd userAdd) throws CustomException {
         log.info(" >>> Tentando registrar um novo User.");
-        return userService.registrar(alunoAdd);
+        return userService.registrar(userAdd);
+    }
+
+    @Operation(summary = "Registrar Empregado", description = "Este endpoint serve para registrar um novo Empregado.")
+    @PostMapping("/registrar/{empresaId}")
+    public ResponseEntity<Retorno> registrarEmpregado(@PathVariable Long empresaId, @RequestBody @Valid UserAdd userAdd) throws CustomException {
+        log.info(" >>> Tentando registrar um novo Empregado.");
+        return userService.registrarEmpregado(empresaId,userAdd );
     }
 
     @Operation(summary = "Upload Foto", description = "Este endpoint serve para alterar foto de usuário logado.")

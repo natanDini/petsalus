@@ -1,0 +1,80 @@
+<div class="empregados-container">
+  <h2>Empregados da Empresa</h2>
+
+  <div class="header-actions">
+    <button (click)="toggleMenu()">Adicionar Funcionário</button>
+    <div class="dropdown" *ngIf="mostrarMenu">
+      <button (click)="abrirCadastroNovo()">Cadastrar Novo</button>
+      <button (click)="abrirVincularExistente()">Vincular Existente</button>
+    </div>
+  </div>
+
+  <!-- Modal Cadastrar Novo -->
+  <div class="modal-backdrop" *ngIf="modalNovo">
+    <div class="modal">
+      <h3>Novo Funcionário</h3>
+      <form (ngSubmit)="salvarNovoFuncionario()">
+        <input [(ngModel)]="funcionario.cpf" name="cpf" placeholder="CPF" required mask="000.000.000-00" />
+        <input [(ngModel)]="funcionario.nome" name="nome" placeholder="Nome" required />
+        <input [(ngModel)]="funcionario.email" name="email" placeholder="Email" required />
+        <input [(ngModel)]="funcionario.senha" name="senha" placeholder="Senha" type="password" required />
+        <input [(ngModel)]="funcionario.username" name="username" placeholder="Usuário" required />
+        <input [(ngModel)]="funcionario.telefone" name="telefone" placeholder="Telefone" required
+          mask="(00) 00000-0000" />
+
+        <select [(ngModel)]="funcionario.userRole" name="userRole">
+          <option value="COLABORADOR">Colaborador</option>
+          <option value="VETERINARIO">Veterinário</option>
+        </select>
+
+        <input [(ngModel)]="funcionario.endereco.cep" name="cep" placeholder="CEP" />
+        <select [(ngModel)]="funcionario.endereco.estado" name="estado" required>
+          <option value="" disabled selected>Selecione o estado</option>
+          <option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</option>
+        </select>
+        <input [(ngModel)]="funcionario.endereco.cidade" name="cidade" placeholder="Cidade" />
+        <input [(ngModel)]="funcionario.endereco.bairro" name="bairro" placeholder="Bairro" />
+        <input [(ngModel)]="funcionario.endereco.endereco" name="endereco" placeholder="Endereço" />
+        <input [(ngModel)]="funcionario.endereco.numero" name="numero" placeholder="Número" />
+        <input [(ngModel)]="funcionario.endereco.complemento" name="complemento" placeholder="Complemento" />
+
+        <div class="modal-buttons">
+          <button type="submit">Salvar</button>
+          <button type="button" (click)="modalNovo = false">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="empregado-card" *ngFor="let emp of empregados">
+    <img [src]="emp.fotoPerfil || 'assets/images/perfil-sem-foto-fake.png'" alt="Foto do empregado">
+
+    <div class="empregado-info">
+      <h3>{{ emp.nome }}</h3>
+      <p><strong>CPF:</strong> {{ emp.cpf }}</p>
+      <p><strong>Email:</strong> {{ emp.email }}</p>
+      <p><strong>Telefone:</strong> {{ emp.telefone }}</p>
+      <p><strong>Usuário:</strong> {{ emp.username }}</p>
+      <p><strong>Função:</strong> {{ emp.userRole }}</p>
+    </div>
+
+    <div class="empregado-endereco">
+      <h4>Endereço</h4>
+      <p><strong>CEP:</strong> {{ emp.endereco.cep }}</p>
+      <p><strong>Endereço:</strong> {{ emp.endereco.endereco }}</p>
+      <p><strong>Número:</strong> {{ emp.endereco.numero }}</p>
+      <p><strong>Complemento:</strong> {{ emp.endereco.complemento }}</p>
+      <p><strong>Bairro:</strong> {{ emp.endereco.bairro }}</p>
+      <p><strong>Cidade:</strong> {{ emp.endereco.cidade }}</p>
+      <p><strong>Estado:</strong> {{ emp.endereco.estado }}</p>
+    </div>
+
+    <div class="empregado-acoes">
+      <button (click)="toggleMenuEmpregado(emp.id)">⋮</button>
+
+      <div class="dropdown" *ngIf="menuAberto === emp.id">
+        <button (click)="confirmarRemocao(emp.id)">Retirar da Equipe</button>
+      </div>
+    </div>
+  </div>
+</div>

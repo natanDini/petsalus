@@ -15,6 +15,7 @@ public record ComprasEmpresa (
         String comprador,
         String cpfComprador,
         Endereco endereco,
+        String fotoComprador,
         List<ProdutosComprasEmpresa> produtos
 ){
 }

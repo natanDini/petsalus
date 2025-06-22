@@ -147,4 +147,30 @@ public class EmpresaEmpregadoService {
         log.info(" >>> Retornando lista de empregados por serviço com sucesso.");
         return EmpregadoMapper.map(empregados);
     }
+
+    public ResponseEntity<Retorno> retirarEmpregadoEmpresa(Long empresaId, Long empregadoId) throws CustomException {
+
+        Empresa empresa = empresaUtils.findById(empresaId);
+        User empregado = userUtils.findById(empregadoId);
+
+        EmpresaEmpregado ee = empresaEmpregadoRepository.findByEmpresaAndEmpregado(empresa, empregado);
+
+        empresaEmpregadoRepository.delete(ee);
+
+        log.info(" >>> Retirando empregado da empresa com sucesso.");
+        return retornoService.retornoSucesso("Retirando empregado da empresa com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> retirarEmpregadoServico(Long servicoId, Long empregadoId) throws CustomException {
+
+        User empregado = userUtils.findById(empregadoId);
+        Servico servico = servicoUtils.findById(servicoId);
+
+        ServicoEmpregado se = servicoEmpregadoRepository.findByServicoAndEmpregado(servico, empregado);
+
+        servicoEmpregadoRepository.delete(se);
+
+        log.info(" >>> Retirando empregado da serviço com sucesso.");
+        return retornoService.retornoSucesso("Retirando empregado da serviço com sucesso.");
+    }
 }

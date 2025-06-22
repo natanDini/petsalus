@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -136,6 +137,10 @@ public class CompraService {
                 total = total.add(produto.getProduto().getPreco().multiply(produto.getQuantidade()));
             }
 
+            String fotoBase64 = compra.getTutor().getFotoPerfil() != null
+                    ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(compra.getTutor().getFotoPerfil())
+                    : null;
+
             comprasEmpresa.add(ComprasEmpresa.builder()
                     .id(compra.getId())
                     .dataHora(compra.getDataHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
@@ -145,6 +150,7 @@ public class CompraService {
                     .endereco(compra.getEndereco())
                     .comprador(compra.getTutor().getNome())
                     .cpfComprador(compra.getTutor().getCpf())
+                    .fotoComprador(fotoBase64)
                     .produtos(ProdutosComprasEmpresaMapper.map(produtos))
                     .build());
         }

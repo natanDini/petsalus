@@ -56,7 +56,7 @@ public class ServicoService {
 
         Empresa empresa = empresaUtils.findById(empresaId);
 
-        List<Servico> servicos = servicoRepository.findByEmpresa(empresa);
+        List<Servico> servicos = servicoRepository.findByEmpresaOrderByNomeAsc(empresa);
 
         emptyUtils.validaListaVazia(servicos, "Nenhum serviço encontrado para essa empresa.");
 

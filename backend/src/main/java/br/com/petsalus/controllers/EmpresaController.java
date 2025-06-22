@@ -44,6 +44,13 @@ public class EmpresaController {
         return empresaService.uploadFoto(empresaId, foto);
     }
 
+    @Operation(summary = "Minhas Empresas", description = "Este endpoint serve para retornar as empresas de um usuário.")
+    @GetMapping("/minhas-empresas")
+    public List<EmpresaShortRes> minhasEmpresas(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+        log.info(" >>> Tentando  retornar as empresas de um usuário.");
+        return empresaService.minhasEmpresas(jwt);
+    }
+
     @Operation(summary = "Empresa getAll", description = "Este endpoint serve para listar todas as Empresas.")
     @GetMapping
     public List<EmpresaShortRes> listar() throws CustomException {

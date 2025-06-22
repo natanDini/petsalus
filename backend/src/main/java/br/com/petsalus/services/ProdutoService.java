@@ -86,7 +86,7 @@ public class ProdutoService {
 
         Empresa empresa = empresaUtils.findById(empresaId);
 
-        List<Produto> produtos = produtoRepository.findByEmpresa(empresa);
+        List<Produto> produtos = produtoRepository.findByEmpresaOrderByNomeAsc(empresa);
 
         log.info(" >>> Retornando lista de Produtos de Empresa com sucesso.");
         return ProdutoResEmpresaMapper.map(produtos);

@@ -76,5 +76,17 @@ public class EmpresaEmpregadoController {
         return empresaEmpregadoService.empregadosByServico(servicoId);
     }
 
+    @Operation(summary = "Retirar Empregado da Empresa", description = "Este endpoint serve para Retirar Empregado da Empresa.")
+    @DeleteMapping("/deletar/{empresaId}/{empregadoId}")
+    public ResponseEntity<Retorno> retirarEmpregadoEmpresa(@PathVariable Long empresaId, @PathVariable Long empregadoId) throws CustomException {
+        log.info(" >>> Tentando Retirar Empregado da Empresa.");
+        return empresaEmpregadoService.retirarEmpregadoEmpresa(empresaId, empregadoId);
+    }
 
+    @Operation(summary = "Retirar Empregado de Serviço", description = "Este endpoint serve para Retirar Empregado de Serviço.")
+    @DeleteMapping("/servico/deletar/{servicoId}/{empregadoId}")
+    public ResponseEntity<Retorno> retirarEmpregadoServico(@PathVariable Long servicoId, @PathVariable Long empregadoId) throws CustomException {
+        log.info(" >>> Tentando Retirar  Empregado de Serviço.");
+        return empresaEmpregadoService.retirarEmpregadoServico(servicoId, empregadoId);
+    }
 }

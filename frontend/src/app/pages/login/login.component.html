@@ -1,0 +1,60 @@
+<main>
+  <!-- Carrossel -->
+  <div class="carousel-container">
+    <div class="carousel-slides" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+      <div class="carousel-item" *ngFor="let slide of slides">
+        <img class="carousel-image" [src]="slide.imagem" [alt]="slide.titulo">
+        <div class="carousel-content">
+          <mat-card-title>{{ slide.titulo }}</mat-card-title>
+          <p>{{ slide.descricao }}</p>
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button class="carousel-button prev" (click)="prevSlide()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button class="carousel-button next" (click)="nextSlide()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <div class="carousel-indicators">
+      <button *ngFor="let slide of slides; let i = index" [class.active]="currentSlide === i" (click)="goToSlide(i)">
+      </button>
+    </div>
+  </div>
+
+  <!-- Área de login -->
+  <div class="login-overlay">
+    <div class="login-card">
+      <div class="login-header">
+        <mat-card-title>Bem vindo ao PetSalus!</mat-card-title>
+
+      </div>
+
+      <form class="login-form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput placeholder="Digite seu Username" required [(ngModel)]="username" name="username">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" placeholder="Digite sua senha" required [(ngModel)]="senha" name="senha">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="login-button">Entrar</button>
+
+        <div class="divider"><span>ou</span></div>
+
+        <div class="social-login">
+          <button mat-stroked-button><mat-icon>google</mat-icon> Google</button>
+          <button mat-stroked-button><mat-icon>facebook</mat-icon> Facebook</button>
+        </div>
+
+        <div class="login-links">
+          <a href="#"><mat-icon>help_outline</mat-icon> Esqueci a senha</a>
+          <a href="#"><mat-icon>person_add</mat-icon> Criar conta</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

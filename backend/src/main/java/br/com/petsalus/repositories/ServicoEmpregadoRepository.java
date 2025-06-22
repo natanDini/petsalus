@@ -16,6 +16,8 @@ public interface ServicoEmpregadoRepository extends JpaRepository<ServicoEmprega
 
     boolean existsByServicoAndEmpregado(Servico servico, User empregado);
 
+    ServicoEmpregado findByServicoAndEmpregado(Servico servico, User empregado);
+
     List<ServicoEmpregado> findByServico(Servico servico);
 
     @Query("""

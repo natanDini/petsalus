@@ -36,6 +36,7 @@ public class UserService {
 
     private final RetornoService retornoService;
     private final EnderecoService enderecoService;
+    private final EmpresaEmpregadoService empresaEmpregadoService;
 
     private final UserRepository userRepository;
 
@@ -58,6 +59,29 @@ public class UserService {
 
         log.info(" >>> User registrado com sucesso.");
         return retornoService.retornoSucesso("User registrado com sucesso.");
+    }
+
+    public ResponseEntity<Retorno> registrarEmpregado(Long empresaId, UserAdd userAdd) throws CustomException {
+
+        Endereco endereco = enderecoService.salvar(userAdd.endereco());
+
+        User user = new User();
+
+        user.setEndereco(endereco);
+        user.setCpf(userAdd.cpf());
+        user.setNome(userAdd.nome());
+        user.setEmail(userAdd.email());
+        user.setUsername(userAdd.username());
+        user.setTelefone(userAdd.telefone());
+        user.setUserRole(UserRole.valueOf(userAdd.userRole()));
+        user.setSenha(passwordEncoder.encode(userAdd.senha()));
+
+        userRepository.save(user);
+
+        empresaEmpregadoService.relacionarEmpregadoEmpresa(empresaId, user.getCpf());
+
+        log.info(" >>> Empregado registrado com sucesso.");
+        return retornoService.retornoSucesso("Empregado registrado com sucesso.");
     }
 
     public String uploadFoto(MultipartFile foto, Jwt jwt)
