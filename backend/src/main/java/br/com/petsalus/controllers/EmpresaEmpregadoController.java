@@ -61,4 +61,20 @@ public class EmpresaEmpregadoController {
         log.info(" >>> Tentando retornar agenda de um empregado em uma data.");
         return empresaEmpregadoService.agenda(jwt, data);
     }
+
+    @Operation(summary = "Vincular Empregado a Serviço", description = "Este endpoint serve para vincular empregado a um serviço.")
+    @PostMapping("/servico/{empregadoId}/{servicoId}")
+    public ResponseEntity<Retorno> vincularEmpregadoServico(@PathVariable Long empregadoId, @PathVariable Long servicoId) throws CustomException {
+        log.info(" >>> Tentando vincular empregado a um serviço.");
+        return empresaEmpregadoService.vincularEmpregadoServico(empregadoId, servicoId);
+    }
+
+    @Operation(summary = "Empregados byServicoId", description = "Este endpoint serve para retornar empregados relacionados a um servico pelo id.")
+    @GetMapping("/empregados/servico/{servicoId}")
+    public List<Empregado> empregadosByServico(@PathVariable Long servicoId) throws CustomException {
+        log.info(" >>> Tentando retornar empregados relacionados a um servico pelo id..");
+        return empresaEmpregadoService.empregadosByServico(servicoId);
+    }
+
+
 }
