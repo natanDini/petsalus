@@ -8,19 +8,22 @@ import java.io.File
 
 class UserService(private val client: HttpClient) {
 
-    suspend fun uploadPhoto(file: File): String? {
+    suspend fun uploadPhoto(file: File, token: String): String? {
         val response: HttpResponse = client.submitFormWithBinaryData(
             url = "http://192.168.1.10:8080/petsalus/api/user/upload-foto",
             formData = formData {
-                append("file", file.readBytes(), Headers.build {
+                append("foto", file.readBytes(), Headers.build {
                     append(HttpHeaders.ContentType, "image/jpeg")
                     append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
                 })
+            },
+            block = {
+                headers.append(HttpHeaders.Authorization, "Bearer $token")
             }
         )
 
         return if (response.status.isSuccess()) {
-            response.bodyAsText()  // Supondo que o backend já devolve o base64 no body
+            response.bodyAsText()
         } else {
             null
         }

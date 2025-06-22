@@ -25,10 +25,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.example.network.KtorClient
 import org.example.project.service.UserService
-import org.example.project.utils.ImageUtils
+import org.example.project.content.TokenStorage
+
+
 import java.io.File
 import java.io.InputStream
 import androidx.compose.ui.graphics.Brush
+import kotlinx.coroutines.flow.collectLatest
+import org.example.project.utils.ImageUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,12 +48,29 @@ fun PerfilScreen(navController: NavController) {
     val context = LocalContext.current
     val userService = UserService(KtorClient.httpClient)
 
+    // TokenStorage para ler o token salvo
+    val tokenStorage: TokenStorage = remember { TokenStorage(context) }
+
+    var token by remember { mutableStateOf<String?>(null) }
+
+
+    // Coletar token armazenado no DataStore
+    LaunchedEffect(Unit) {
+        tokenStorage.tokenFlow.collectLatest {
+            token = it
+        }
+    }
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                uploadImage(context, it, userService) { responseBase64 ->
-                    base64Image = responseBase64
+                if (token != null) {
+                    uploadImage(context, it, userService, token!!) { responseBase64 ->
+                        base64Image = responseBase64
+                    }
+                } else {
+                    // Token não disponível - tratar aqui caso queira
                 }
             }
         }
@@ -85,13 +106,15 @@ fun PerfilScreen(navController: NavController) {
                 ) {
                     if (base64Image != null) {
                         val imageBitmap = ImageUtils.decodeBase64ToImageBitmap(base64Image!!)
-                        Image(
-                            bitmap = imageBitmap,
-                            contentDescription = "Foto Perfil",
-                            modifier = Modifier
-                                .size(120.dp)
-                                .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
-                        )
+                        imageBitmap?.let {
+                            Image(
+                                bitmap = it,
+                                contentDescription = "Foto Perfil",
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
+                            )
+                        }
                     } else {
                         Icon(
                             imageVector = Icons.Default.Person,
@@ -100,6 +123,7 @@ fun PerfilScreen(navController: NavController) {
                             modifier = Modifier.size(64.dp)
                         )
                     }
+
                 }
 
                 OutlinedTextField(
@@ -107,7 +131,9 @@ fun PerfilScreen(navController: NavController) {
                     onValueChange = { nome = it },
                     placeholder = { Text("Nome") },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
                     shape = RoundedCornerShape(16.dp)
                 )
 
@@ -116,7 +142,9 @@ fun PerfilScreen(navController: NavController) {
                     onValueChange = { idade = it },
                     placeholder = { Text("Idade") },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
                     shape = RoundedCornerShape(16.dp)
                 )
 
@@ -133,10 +161,12 @@ fun PerfilScreen(navController: NavController) {
     }
 }
 
+// Função atualizada para receber token e passá-lo para o UserService
 fun uploadImage(
     context: Context,
     uri: Uri,
     userService: UserService,
+    token: String,
     onResponse: (String?) -> Unit
 ) {
     val contentResolver = context.contentResolver
@@ -146,7 +176,13 @@ fun uploadImage(
     inputStream?.use { input -> tempFile.outputStream().use { input.copyTo(it) } }
 
     CoroutineScope(Dispatchers.IO).launch {
-        val responseBase64 = userService.uploadPhoto(tempFile)
-        onResponse(responseBase64)
+        val responseBase64 = userService.uploadPhoto(tempFile, token)
+        if (!responseBase64.isNullOrBlank()) {
+            onResponse(responseBase64)
+        } else {
+            // Evita crash
+            println("Erro: base64 retornado nulo ou vazio")
+            onResponse(null)
+        }
     }
 }

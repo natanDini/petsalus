@@ -53,6 +53,7 @@ kotlin {
             implementation("io.ktor:ktor-client-logging:2.3.2")
             implementation ("io.coil-kt:coil-compose:2.4.0")
             implementation ("io.coil-kt:coil-svg:2.4.0")
+            implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
 
         }
