@@ -141,8 +141,7 @@ fun MenuScreen(navController: NavController) {
                                 .fillMaxWidth()
                                 .height(120.dp)
                             .clickable {
-                            // Ação ao clicar
-                            println("Card clicado!")
+                            navController.navigate("cadastropet")
                         },
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
