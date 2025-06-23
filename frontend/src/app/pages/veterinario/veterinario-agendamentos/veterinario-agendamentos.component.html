@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="header">
+    <h2>Meus Agendamentos</h2>
+    <input type="date" [value]="dataInput" (change)="buscarPorData($event)" />
+  </div>
+
+  <div *ngIf="agendamentos.length === 0">
+    <p>Nenhum agendamento encontrado.</p>
+  </div>
+
+  <div *ngFor="let agendamento of agendamentos" class="agenda-card">
+    <div class="card-header">
+      <h3>{{ agendamento.servico }}</h3>
+
+      <div class="dropdown-wrapper">
+        <button class="menu-button" (click)="toggleDropdown(agendamento.id)">⋮</button>
+        <ul *ngIf="dropdownAberto[agendamento.id]" class="dropdown-menu">
+          <li (click)="efetivarAgendamento(agendamento.id)">Efetivar</li>
+          <li (click)="cancelarAgendamento(agendamento.id)">Cancelar</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>Cliente:</strong> {{ agendamento.clienteNome }}</p>
+    <p><strong>Pet:</strong> {{ agendamento.petNome }} ({{ agendamento.especie }} - {{ agendamento.raca }})</p>
+    <p><strong>Data/Hora:</strong> {{ agendamento.dataHoraAgendada }}</p>
+    <p><strong>Preço:</strong> {{ agendamento.preco }}</p>
+    <p><strong>Duração:</strong> {{ agendamento.tempoServicoMin }} min</p>
+    <p><strong>Status:</strong> {{ agendamento.status }}</p>
+  </div>
+</div>

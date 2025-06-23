@@ -38,6 +38,13 @@ public class ServicoController {
         return servicoService.getServicosByEmpresaId(empresaId);
     }
 
+    @Operation(summary = "Serviços byEmpresaId Veterinários", description = "Este endpoint serve para retornar Serviços Veterinários em uma Empresa.")
+    @GetMapping("/veterinarios/{empresaId}")
+    public List<ServicoRes> getServicosVeterinariosByEmpresaId(@PathVariable Long empresaId) throws CustomException {
+        log.info(" >>> Tentando retornar Serviços Veterinários de uma empresa.");
+        return servicoService.getServicosVeterinariosByEmpresaId(empresaId);
+    }
+
     @Operation(summary = "Serviços Públicos byEmpresaId", description = "Este endpoint serve para retornar Serviços que usuários podem marcar sozinhos em uma Empresa.")
     @GetMapping("/{empresaId}/publicos")
     public List<ServicoRes> getServicosPublicosByEmpresaId(@PathVariable Long empresaId) throws CustomException {

@@ -16,6 +16,10 @@ import { ColaboradorProdutosComponent } from './pages/colaborador/colaborador-pr
 import { ColaboradorComprasComponent } from './pages/colaborador/colaborador-compras/colaborador-compras.component';
 import { ColaboradorServicosComponent } from './pages/colaborador/colaborador-servicos/colaborador-servicos.component';
 import { ColaboradorAgendamentosComponent } from './pages/colaborador/colaborador-agendamentos/colaborador-agendamentos.component';
+import { EmpresaVeterinarioComponent } from './pages/veterinario/empresa-veterinario/empresa-veterinario.component';
+import { VeterinarioServicosComponent } from './pages/veterinario/veterinario-servicos/veterinario-servicos.component';
+import { VeterinarioAgendamentosComponent } from './pages/veterinario/veterinario-agendamentos/veterinario-agendamentos.component';
+import { VeterinarioRegistrosComponent } from './pages/veterinario/veterinario-registros/veterinario-registros.component';
 
 export const routes: Routes = [
 
@@ -37,6 +41,10 @@ export const routes: Routes = [
 
   // VETERINARIO
   { path: 'veterinario', component: VeterinarioHomeComponent },
+  { path: 'veterinario/empresa/:id', component: EmpresaVeterinarioComponent },
+  { path: 'veterinario/empresa/servicos/:id', component: VeterinarioServicosComponent },
+  { path: 'veterinario/empresa/agendamentos/:id', component: VeterinarioAgendamentosComponent },
+  { path: 'veterinario/empresa/registros/:id', component: VeterinarioRegistrosComponent },
 
   // COLABORADOR 
   { path: 'colaborador', component: ColaboradorHomeComponent },

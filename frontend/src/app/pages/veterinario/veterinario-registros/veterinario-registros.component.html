@@ -1,0 +1,93 @@
+<section class="busca-cpf">
+  <label>
+    <span>CPF do Tutor <br></span>
+    <input [(ngModel)]="cpf" name="cpf" placeholder="CPF" required mask="000.000.000-00" />
+  </label>
+  <button class="btn" (click)="buscarPets()" [disabled]="carregandoPets">
+    Buscar Pets
+  </button>
+</section>
+
+<!-- LISTA DE PETS ---------------------------------------------------------- -->
+<div class="pets-list" *ngIf="pets.length">
+  <article class="pet-card" *ngFor="let p of pets" (click)="selecionarPet(p)">
+    <img [src]="p.fotoPerfil ?  p.fotoPerfil : 'assets/images/pet-perfil-sem-foto.png'" alt="{{ p.nome }}" />
+    <h3>{{ p.nome }}</h3>
+  </article>
+</div>
+
+<!-- DETALHES E REGISTROS --------------------------------------------------- -->
+<div class="detalhes" *ngIf="petSelecionado">
+
+  <!-- Resumo do Pet -->
+  <article class="pet-resumo">
+    <img [src]="petSelecionado.fotoPerfil ? petSelecionado.fotoPerfil
+                  : 'assets/images/pet-perfil-sem-foto.png'" alt="{{ petSelecionado.nome }}"/>
+    <div>
+      <h2>{{ petSelecionado.nome }}</h2>
+      <p><strong>Espécie:</strong> {{ petSelecionado.especie }}</p>
+      <p><strong>Raça:</strong> {{ petSelecionado.raca }}</p>
+      <p><strong>Sexo:</strong> {{ petSelecionado.sexo }}</p>
+      <p><strong>Idade:</strong> {{ petSelecionado.idade }} anos</p>
+      <p><strong>Peso:</strong> {{ petSelecionado.peso }} kg</p>
+    </div>
+  </article>
+
+  <!-- Botão Cadastro Emergência -->
+  <button class="btn--primary" (click)="abrirModal()">Cadastrar Registro de Emergência</button>
+
+  <!-- Registros -->
+  <h3 class="records-title">Registros Médicos</h3>
+  <div class="registros-list" *ngIf="registros.length; else vazio">
+    <article class="registro-card" *ngFor="let reg of registros">
+      <header>
+        <img [src]="reg.empresaFotoPerfil
+                     ? ('data:image/jpeg;base64,' + reg.empresaFotoPerfil)
+                     : 'assets/images/pet_shop.jpg'"
+             alt="{{ reg.empresa }}" />
+        <div class="info">
+          <h4>{{ reg.tituloServico }} <small>({{ reg.tipoServico }})</small></h4>
+          <p class="empresa">{{ reg.empresa }} ({{ reg.empresaCnpj }})</p>
+          <p class="data">{{ reg.dataHora }} &middot; {{ reg.veterinario }}</p>
+        </div>
+      </header>
+      <p class="descricao">{{ reg.descricao }}</p>
+    </article>
+  </div>
+  <ng-template #vazio>
+    <p class="vazio">Nenhum registro encontrado.</p>
+  </ng-template>
+</div>
+
+<!-- MODAL Cadastro Emergência --------------------------------------------- -->
+<div class="modal-backdrop" *ngIf="modalAberta">
+  <div class="modal">
+    <h3>Novo Registro de Emergência</h3>
+
+    <label>
+      <span>Serviço</span>
+      <select [(ngModel)]="novoRegistro.servicoId">
+        <option [ngValue]="null" disabled>Selecione…</option>
+        <option *ngFor="let s of servicos" [value]="s.id">{{ s.nome }}</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Descrição</span>
+      <textarea rows="4" [(ngModel)]="novoRegistro.descricao"></textarea>
+    </label>
+
+    <label>
+      <span>Data e Hora</span>
+      <input type="datetime-local" [(ngModel)]="novoRegistro.dataHora" />
+    </label>
+
+    <div class="modal-actions">
+      <button class="btn" (click)="fecharModal()">Cancelar</button>
+      <button class="btn--primary" (click)="salvarRegistro()"
+              [disabled]="!novoRegistro.servicoId || !novoRegistro.dataHora">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
