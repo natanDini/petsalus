@@ -1,37 +1,103 @@
 <main class="cadastro-container">
   <div class="cadastro-card">
-    <div class="cadastro-header">
-      <mat-card-title>Crie sua conta no PetSalus</mat-card-title>
-      <p>É rápido, fácil e gratuito!</p>
-    </div>
+    <mat-card-title>Crie sua conta no PetSalus</mat-card-title>
+    <p class="subtitle">É rápido, fácil e gratuito!</p>
 
     <form class="cadastro-form" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Nome completo</mat-label>
-        <input matInput placeholder="Digite seu nome" required [(ngModel)]="nome" name="nome">
-      </mat-form-field>
+      <div class="form-columns">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput placeholder="Digite seu email" required [(ngModel)]="email" name="email" type="email">
-      </mat-form-field>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome completo</mat-label>
+            <input matInput [(ngModel)]="nome" name="nome" required>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Senha</mat-label>
-        <input matInput placeholder="Crie uma senha" required [(ngModel)]="senha" name="senha" type="password">
-      </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>CPF</mat-label>
+            <input matInput [(ngModel)]="cpf" name="cpf" required mask="000.000.000-00">
+          </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Confirmar senha</mat-label>
-        <input matInput placeholder="Confirme sua senha" required [(ngModel)]="confirmarSenha" name="confirmarSenha" type="password">
-      </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Telefone</mat-label>
+            <input matInput [(ngModel)]="telefone" name="telefone" required mask="(00) 00000-0000">
+          </mat-form-field>
 
-      <button mat-raised-button color="primary" class="cadastro-button" type="submit">Criar Conta</button>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="email" name="email" required>
+          </mat-form-field>
 
-      <div class="login-links">
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput [(ngModel)]="username" name="username" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de Usuário</mat-label>
+            <mat-select [(ngModel)]="userRole" name="userRole" required>
+              <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>CEP</mat-label>
+            <input matInput [(ngModel)]="endereco.cep" name="cep" required mask="00000-000">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Endereço</mat-label>
+            <input matInput [(ngModel)]="endereco.endereco" name="endereco" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Número</mat-label>
+            <input matInput [(ngModel)]="endereco.numero" name="numero" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bairro</mat-label>
+            <input matInput [(ngModel)]="endereco.bairro" name="bairro" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cidade</mat-label>
+            <input matInput [(ngModel)]="endereco.cidade" name="cidade" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Estado (UF)</mat-label>
+            <mat-select [(ngModel)]="endereco.estado" name="estado" required>
+              <mat-option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Complemento</mat-label>
+            <input matInput [(ngModel)]="endereco.complemento" name="complemento">
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div class="senha-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Senha</mat-label>
+          <input matInput [(ngModel)]="senha" name="senha" required type="password">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Confirmar senha</mat-label>
+          <input matInput [(ngModel)]="confirmarSenha" name="confirmarSenha" required type="password">
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" class="cadastro-button">Criar Conta</button>
+
+      <div class="login-link">
         <a routerLink="/login"><mat-icon>arrow_back</mat-icon> Já tenho uma conta</a>
       </div>
     </form>
   </div>
 </main>
-

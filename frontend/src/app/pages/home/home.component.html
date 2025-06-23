@@ -1,0 +1,78 @@
+<!-- HERO / BANNER PRINCIPAL -->
+<section class="hero">
+    <img class="hero__img" src="assets/home/banner.jpeg" alt="PetSalus – bem-estar animal" />
+    <div class="hero__overlay">
+        <h1 class="hero__title">PetSalus</h1>
+        <p class="hero__subtitle">
+            Tudo para o seu pet em um único lugar – serviços, produtos e registros médicos.
+        </p>
+        <button class="btn btn--primary" routerLink="/login">Conheça nossos planos</button>
+    </div>
+</section>
+
+<!-- CARROSSEL DE DESTAQUES -->
+<section class="carousel">
+    <button class="carousel__nav prev" (click)="prevSlide()">&#10094;</button>
+
+    <div class="carousel__track" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+        <article *ngFor="let slide of highlightSlides" class="carousel__item">
+            <img [src]="slide.img" [alt]="slide.title" />
+            <div class="carousel__overlay">
+                <h2 class="carousel__title">{{ slide.title }}</h2>
+                <p class="carousel__subtitle">{{ slide.text }}</p>
+            </div>
+        </article>
+    </div>
+
+    <button class="carousel__nav next" (click)="nextSlide()">&#10095;</button>
+
+    <div class="carousel__dots">
+        <button *ngFor="let slide of highlightSlides; let idx = index" [class.active]="idx === currentSlide"
+            (click)="goToSlide(idx)">
+        </button>
+    </div>
+</section>
+
+<!-- CATEGORIAS DE PETS -->
+<section class="categories container">
+    <h2>Nossos Amigos</h2>
+    <div class="categories__grid">
+        <div class="cat-card" *ngFor="let c of categories">
+            <img [src]="c.img" [alt]="c.name" />
+            <h3>{{ c.name }}</h3>
+        </div>
+    </div>
+</section>
+
+<section class="categories container section-gap"></section>
+
+<!-- SERVIÇOS -->
+<section class="services">
+    <h2>Serviços PetSalus</h2>
+    <div class="services__grid">
+        <article class="service-card" *ngFor="let s of services">
+            <img [src]="s.img" [alt]="s.title" />
+            <h3>{{ s.title }}</h3>
+            <p>{{ s.text }}</p>
+        </article>
+    </div>
+</section>
+
+<!-- PRODUTOS EM DESTAQUE -->
+<section class="products container">
+    <h2>Produtos em Evidência</h2>
+    <div class="products__grid">
+        <div class="prod-card" *ngFor="let p of products">
+            <img [src]="p.img" [alt]="p.name" />
+            <span>{{ p.name }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="categories container section-gap"></section>
+
+<!-- CTA FINAL -->
+<footer class="cta">
+    <h2>Pronto para cuidar melhor do seu pet?</h2>
+    <button class="btn btn--secondary" routerLink="/login">Criar minha conta</button>
+</footer>

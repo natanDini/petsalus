@@ -1,0 +1,319 @@
+/* ---------- Variáveis de cor ---------- */
+$wine: #F22222;
+$sand: #FAD8B3;
+$cyan: #17A0BF;
+$orange: #F29422;
+$red: #F22222;
+$dark: #222;
+$light: #fafafa;
+
+/* ---------- Elementos utilitários ---------- */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.btn {
+    cursor: pointer;
+    border: 0;
+    padding: .75rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+.btn--primary {
+    background: $wine;
+    color: $light;
+}
+
+.btn--secondary {
+    background: $orange;
+    color: $light;
+}
+
+h2 {
+    text-align: center;
+    margin: 3rem 0 2rem;
+    font-size: 2rem;
+    color: $wine;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    border-radius: 12px;
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+}
+
+.hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba($dark, .55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: $light;
+    padding: 0 1rem;
+}
+
+.hero__title {
+    font-size: 3.5rem;
+    letter-spacing: 1px;
+    margin-bottom: .5rem;
+}
+
+.hero__subtitle {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin-bottom: 1.5rem;
+}
+
+/* ---------- CARROSSEL ---------- */
+.carousel {
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    margin: 4rem 0;
+}
+
+.carousel__track {
+    display: flex;
+    transition: transform .6s ease;
+}
+
+.carousel__item {
+    min-width: 100%;
+    position: relative;
+}
+
+.carousel__item img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.carousel__caption {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba($dark, .6);
+    color: $light;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+}
+
+.carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba($dark, .4);
+    border: none;
+    color: $light;
+    font-size: 2rem;
+    line-height: 1;
+    padding: .2rem .8rem;
+    cursor: pointer;
+}
+
+.carousel__nav:hover {
+    background: rgba($dark, .6);
+}
+
+.prev {
+    left: 1rem;
+}
+
+.next {
+    right: 1rem;
+}
+
+.carousel__dots {
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+
+.carousel__dots button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: $sand;
+    cursor: pointer;
+    transition: background .3s;
+}
+
+.carousel__dots button.active {
+    background: $wine;
+}
+
+/* ---------- CATEGORIAS ---------- */
+.categories__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.cat-card {
+    background: $light;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba($dark, .1);
+    text-align: center;
+    padding-bottom: 1rem;
+    transition: transform .3s;
+    cursor: pointer;
+}
+
+.cat-card:hover {
+    transform: translateY(-4px);
+}
+
+.cat-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+}
+
+.cat-card h3 {
+    margin-top: .75rem;
+    font-size: 1rem;
+    color: $dark;
+}
+
+/* ---------- SERVIÇOS ---------- */
+.services {
+    border-radius: 12px;
+    background: $sand;
+    padding: 4rem 0;
+}
+
+.services__grid {
+    @extend .container;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background: $light;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba($dark, .15);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.service-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.service-card h3 {
+    color: $wine;
+    margin-bottom: .5rem;
+}
+
+/* ---------- PRODUTOS ---------- */
+.products__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.prod-card {
+    background: $light;
+    border-radius: 12px;
+    text-align: center;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba($dark, .1);
+}
+
+.prod-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: .5rem;
+}
+
+/* ---------- CTA ---------- */
+.cta {
+    border-radius: 12px;
+    background: $cyan;
+    color: $light;
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.cta h2 {
+    color: $light;
+    margin-bottom: 1.5rem;
+}
+
+.carousel__item {
+    position: relative;
+    min-width: 100%;
+    height: 400px;
+    overflow: hidden; // garante que nada vaze
+}
+
+.carousel__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: none; // 🔴 remove zoom
+    filter: none; // 🔴 remove blur
+    display: block;
+}
+
+/* Overlay escuro em cima da imagem */
+.carousel__item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba($dark, 0.55); // escurece como no HERO
+    z-index: 1;
+}
+
+/* Texto sobre a imagem */
+.carousel__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $light;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.carousel__title {
+    font-size: 2.5rem;
+    margin-bottom: .5rem;
+}
+
+.carousel__subtitle {
+    font-size: 1.25rem;
+    max-width: 600px;
+}
+
+.section-gap {
+    margin-bottom: 5rem;
+}

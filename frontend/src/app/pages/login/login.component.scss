@@ -50,7 +50,7 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 40%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
     z-index: 1;
   }
 }
@@ -288,7 +288,8 @@ main {
   color: mat.get-color-from-palette(mat.$gray-palette, 500);
   font-size: 0.8rem;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     flex: 1;
     border-bottom: 1px solid mat.get-color-from-palette(mat.$gray-palette, 200);
@@ -307,12 +308,14 @@ main {
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 }
+
 @media (max-width: 600px) {
   .login-card {
     padding: 1.5rem 1rem;
@@ -335,7 +338,7 @@ main {
 }
 
 @media (max-width: 470px) {
-  .carousel-container{
+  .carousel-container {
     display: none;
   }
 }

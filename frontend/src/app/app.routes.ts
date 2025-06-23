@@ -20,12 +20,14 @@ import { EmpresaVeterinarioComponent } from './pages/veterinario/empresa-veterin
 import { VeterinarioServicosComponent } from './pages/veterinario/veterinario-servicos/veterinario-servicos.component';
 import { VeterinarioAgendamentosComponent } from './pages/veterinario/veterinario-agendamentos/veterinario-agendamentos.component';
 import { VeterinarioRegistrosComponent } from './pages/veterinario/veterinario-registros/veterinario-registros.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 export const routes: Routes = [
 
   // Compartilhado
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'perfil', component: PerfilComponent },
   { path: 'cadastro', component: CadastroComponent },
 
   // TUTOR

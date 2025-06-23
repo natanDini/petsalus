@@ -1,0 +1,53 @@
+<div class="perfil-container" *ngIf="perfil">
+  <div class="foto-wrapper">
+    <img [src]="perfil.fotoPerfil ? perfil.fotoPerfil : 'assets/images/perfil-sem-foto-fake.png'" alt="Foto de Perfil"
+      class="foto-perfil" />
+    <label class="botao-upload">
+      Trocar Foto
+      <input type="file" (change)="trocarFoto($event)" hidden />
+    </label>
+  </div>
+
+  <h2>{{ perfil.nome }}</h2>
+  <p><strong>CPF:</strong> {{ perfil.cpf }}</p>
+  <p><strong>Email:</strong> {{ perfil.email }}</p>
+  <p><strong>Telefone:</strong> {{ perfil.telefone }}</p>
+  <p><strong>Username:</strong> {{ perfil.username }}</p>
+
+  <h3>Endereço</h3>
+  <p>{{ perfil.endereco.endereco }}, {{ perfil.endereco.numero }}</p>
+  <p>{{ perfil.endereco.bairro }} - {{ perfil.endereco.cidade }} / {{ perfil.endereco.estado }}</p>
+  <p>{{ perfil.endereco.cep }}</p>
+  <p><em>{{ perfil.endereco.complemento }}</em></p>
+
+  <div class="botoes-acao">
+    <button (click)="modalAberta = true" class="btn editar">Editar Perfil</button>
+    <button (click)="excluirConta()" class="btn excluir">Excluir Conta</button>
+  </div>
+</div>
+
+<!-- Modal de edição -->
+<div class="modal-backdrop" *ngIf="modalAberta">
+  <div class="modal">
+    <h3>Editar Perfil</h3>
+    <form (ngSubmit)="salvarEdicao()">
+      <label>Nome: <input [(ngModel)]="novoPerfil.nome" name="nome" /></label>
+      <label>Email: <input [(ngModel)]="novoPerfil.email" name="email" /></label>
+      <label>Telefone: <input [(ngModel)]="novoPerfil.telefone" name="telefone" /></label>
+
+      <h4>Endereço</h4>
+      <label>CEP: <input [(ngModel)]="novoPerfil.endereco.cep" name="cep" /></label>
+      <label>Rua: <input [(ngModel)]="novoPerfil.endereco.endereco" name="endereco" /></label>
+      <label>Número: <input [(ngModel)]="novoPerfil.endereco.numero" name="numero" /></label>
+      <label>Bairro: <input [(ngModel)]="novoPerfil.endereco.bairro" name="bairro" /></label>
+      <label>Cidade: <input [(ngModel)]="novoPerfil.endereco.cidade" name="cidade" /></label>
+      <label>Estado: <input [(ngModel)]="novoPerfil.endereco.estado" name="estado" /></label>
+      <label>Complemento: <input [(ngModel)]="novoPerfil.endereco.complemento" name="complemento" /></label>
+
+      <div class="botoes-modal">
+        <button type="submit" class="btn salvar">Salvar</button>
+        <button type="button" class="btn cancelar" (click)="modalAberta = false">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     MatInputModule,
     MatButtonModule,
@@ -32,23 +33,23 @@ export class LoginComponent {
 
   slides = [
     {
-      imagem: 'assets/images/pet_shop.jpg',
-      titulo: 'Cuidados com seu Pet',
-      descricao: 'Serviços veterinários e produtos com qualidade.',
+      imagem: 'assets/images/tutores.jpg',
+      titulo: 'Para Tutores',
+      descricao: 'Um ambiente completo para cuidar da saúde, bem-estar e felicidade do seu pet.',
     },
     {
-      imagem: 'assets/images/banho-e-tosa.png',
-      titulo: 'Banho e Tosa',
-      descricao: 'Seu pet limpo, feliz e saudável.',
+      imagem: 'assets/images/dono-pet.jpg',
+      titulo: 'Para Empresários e MEIs',
+      descricao: 'Impulsione seu negócio com visibilidade, agendamentos e gestão facilitada.',
     },
     {
-      imagem: 'assets/images/vacinacao.jpg',
-      titulo: 'Vacinação em Dia',
-      descricao: 'Proteja quem você ama com nossas vacinas.',
+      imagem: 'assets/images/veterinario.jpg',
+      titulo: 'Para Veterinários',
+      descricao: 'Conecte-se a novos clientes, amplie sua atuação e ofereça um atendimento de excelência.',
     },
   ];
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   get totalSlides(): number {
     return this.slides.length;
@@ -78,20 +79,14 @@ export class LoginComponent {
           localStorage.setItem('access_token', response.token);
           localStorage.setItem('user_role', response.userRole);
 
-          if (response.userRole === 'DONO') {
-            this.router.navigate(['/dono']);
-          } 
-          
-          if (response.userRole === 'TUTOR') {
-            this.router.navigate(['/tutor']);
-          }
+          // 🔔 Notifica a Navbar
+          window.dispatchEvent(new Event('userChanged'));
 
-          if (response.userRole === 'VETERINARIO') {
-            this.router.navigate(['/veterinario']);
-          }
-
-          if (response.userRole === 'COLABORADOR') {
-            this.router.navigate(['/colaborador']);
+          switch (response.userRole) {
+            case 'DONO': this.router.navigate(['/dono']); break;
+            case 'TUTOR': this.router.navigate(['/tutor']); break;
+            case 'VETERINARIO': this.router.navigate(['/veterinario']); break;
+            case 'COLABORADOR': this.router.navigate(['/colaborador']); break;
           }
         },
         error: (err) => {

@@ -1,26 +1,35 @@
-<mat-toolbar [color]="color" class="mat-elevation-z6">
+<mat-toolbar class="mat-elevation-z6">
   <button mat-icon-button class="mobile-menu-button">
     <mat-icon>menu</mat-icon>
   </button>
 
   <a routerLink="/" class="app-name">
-
-    <img src="./assets/logo-petsalus.png"  width="60" height="60">
+    <img src="./assets/logo-petsalus.png" width="60" height="60">
+    <h1>PetSalus</h1>
   </a>
 
   <span class="spacer"></span>
 
-  <!-- Menu para desktop -->
   <div class="desktop-menu">
-    <a
-      *ngFor="let item of menuItems"
-      mat-button
-      [routerLink]="item.path"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }">
-      <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
-      {{ item.title }}
+    <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon>home</mat-icon> Home
     </a>
+
+    <ng-container *ngIf="!user">
+      <a mat-button routerLink="/login">
+        <mat-icon>login</mat-icon> Login
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="user">
+      <button mat-button (click)="logout()">
+        <mat-icon>logout</mat-icon> Logout
+      </button>
+      <a routerLink="/perfil" class="user-info">
+        <img [src]="user.fotoPerfil ? user.fotoPerfil : 'assets/images/perfil-sem-foto-fake.png'" class="user-img" />
+        <span>{{ user.nome }}</span>
+      </a>
+    </ng-container>
   </div>
 
   <!-- Menu para mobile -->
@@ -29,11 +38,7 @@
   </button>
 
   <mat-menu #mobileMenu="matMenu">
-    <a
-      *ngFor="let item of menuItems"
-      mat-menu-item
-      [routerLink]="item.path"
-      routerLinkActive="active-link"
+    <a *ngFor="let item of menuItems" mat-menu-item [routerLink]="item.path" routerLinkActive="active-link"
       [routerLinkActiveOptions]="{ exact: true }">
       <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
       <span>{{ item.title }}</span>

@@ -5,7 +5,8 @@ mat-toolbar {
   top: 0;
   z-index: 100;
   padding: 0 2rem;
-  height: 64px;
+  height: 100px;
+  background: linear-gradient(to right, #F29422, #F22222); // <-- aqui
 
   @media (max-width: 959px) {
     padding: 0 1rem;
@@ -18,6 +19,17 @@ mat-toolbar {
   text-decoration: none;
   color: inherit;
   margin-right: 1rem;
+  gap: 10px;
+
+  img {
+    height: 90px;
+    width: 90px;
+  }
+
+  h1 {
+    font-size: 2.0rem;
+    color: #fae1c6;
+  }
 
   span {
     margin-left: 8px;
@@ -52,6 +64,30 @@ mat-toolbar {
   }
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+
+  img.user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  span {
+    font-weight: 400;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .mobile-menu-button {
   @media (min-width: 960px) {
     display: none;
@@ -65,4 +101,3 @@ mat-toolbar {
     color: mat.get-color-from-palette(mat.$indigo-palette, 300);
   }
 }
-
