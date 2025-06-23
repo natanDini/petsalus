@@ -1,0 +1,114 @@
+<div class="servicos-container">
+    <div class="header">
+        <h2>Serviços da Empresa</h2>
+        <button (click)="abrirModal()">+ Adicionar Serviço</button>
+    </div>
+
+    <div *ngFor="let servico of servicos" class="servico-card">
+        <div class="card-header">
+            <h3>{{ servico.nome }}</h3>
+            <div class="dropdown-wrapper" (click)="toggleDropdown(servico.id)">
+                <button class="dots">&#8942;</button>
+                <ul *ngIf="dropdownAberto[servico.id]" class="dropdown-menu">
+                    <li (click)="editarServico(servico)">Editar</li>
+                    <li (click)="confirmarExclusao(servico.id)">Excluir</li>
+                    <li (click)="abrirModalResponsaveis(servico.id)">Responsáveis</li>
+                </ul>
+            </div>
+        </div>
+        <p><strong>Preço:</strong> {{ servico.preco }}</p>
+        <p><strong>Descrição:</strong> {{ servico.descricao }}</p>
+        <p><strong>Duração:</strong> {{ servico.tempoServicoMin }} minutos</p>
+        <p><strong>Tipo:</strong> {{ servico.tipoServico }}</p>
+    </div>
+</div>
+
+<!-- Modal Responsáveis -->
+<div class="modal-backdrop" *ngIf="modalResponsaveisAberta">
+    <div class="modal">
+        <h3>Responsáveis pelo Serviço</h3>
+
+        <div *ngIf="responsaveis.length > 0; else nenhumResponsavel">
+            <div class="responsavel-card" *ngFor="let r of responsaveis">
+                <img [src]="r.fotoPerfil ? 'data:image/jpeg;base64,' + r.fotoPerfil
+                           : 'assets/images/perfil-sem-foto-fake.png'" />
+                <div class="dados">
+                    <strong>{{ r.nome }}</strong>
+                    <p>{{ r.email }}</p>
+                    <p>{{ r.cpf }} • {{ r.telefone }} • {{ r.userRole }}</p>
+                </div>
+                <button class="remove" (click)="desvincularResponsavel(r.id)" title="Desvincular">&#10006;</button>
+            </div>
+        </div>
+
+        <form class="vinculo-box" (ngSubmit)="vincularResponsavel()">
+            <label>
+                Novo responsável:
+                <select [(ngModel)]="empregadoSelecionadoId" name="novoResp" required>
+                    <option value="" disabled selected>Selecione…</option>
+                    <option *ngFor="let e of candidatos" [value]="e.id">
+                        {{ e.nome }} — {{ e.userRole }}
+                    </option>
+                </select>
+            </label>
+
+            <button type="submit" [disabled]="!empregadoSelecionadoId">Vincular</button>
+        </form>
+
+        <ng-template #nenhumResponsavel>
+            <p>Nenhum responsável cadastrado para este serviço.</p>
+        </ng-template>
+
+        <div class="modal-buttons">
+            <button type="button" (click)="fecharModalResponsaveis()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="modalAberta">
+    <div class="modal">
+        <h3>{{ editandoServico ? 'Editar Serviço' : 'Novo Serviço' }}</h3>
+        <form (ngSubmit)="salvarServico()">
+            <div class="form-field">
+                <label for="nome">Nome</label>
+                <input id="nome" [(ngModel)]="novoServico.nome" name="nome" required />
+            </div>
+
+            <div class="form-field">
+                <label for="preco">Preço (ex: 50.00)</label>
+                <input id="preco" type="number" [(ngModel)]="novoServico.preco" name="preco" required />
+            </div>
+
+            <div class="form-field">
+                <label for="descricao">Descrição</label>
+                <textarea id="descricao" [(ngModel)]="novoServico.descricao" name="descricao"></textarea>
+            </div>
+
+            <div class="form-field">
+                <label for="tempo">Duração (minutos)</label>
+                <input id="tempo" type="number" [(ngModel)]="novoServico.tempoServicoMin" name="tempoServicoMin"
+                    required />
+            </div>
+
+            <div class="form-field">
+                <label for="tipoServico">Tipo de Serviço</label>
+                <select id="tipoServico" [(ngModel)]="novoServico.tipoServico" name="tipoServico" required>
+                    <option value="PET_SHOP">Serviço de PetShop</option>
+                    <option value="CLINICO">Serviço Clínico</option>
+                </select>
+            </div>
+
+            <div class="checkbox-field">
+                <input id="publico" type="checkbox" [(ngModel)]="novoServico.isPublico" name="isPublico" />
+                <label for="publico">O usuário pode marcar sozinho?</label>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="submit">Salvar</button>
+                <button type="button" (click)="fecharModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>

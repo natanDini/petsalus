@@ -1,0 +1,39 @@
+<div *ngIf="empresa" class="empresa-detalhes">
+  <img [src]="empresa.fotoPerfil || 'assets/images/pet_shop.jpg'" alt="Foto da empresa">
+
+  <h2>{{ empresa.nome }}</h2>
+
+  <div class="info-wrapper">
+    <div class="info-bloco">
+      <h3>Informações da Empresa</h3>
+      <p><strong>CNPJ:</strong> {{ empresa.cnpj }}</p>
+      <p><strong>Email:</strong> {{ empresa.email }}</p>
+      <p><strong>Telefone:</strong> {{ empresa.telefone }}</p>
+      <p><strong>Modelo Comercial:</strong> {{ empresa.modeloComercial }}</p>
+      <p><strong>Descrição:</strong> {{ empresa.descricao }}</p>
+      <p><strong>Horário:</strong>
+        {{ empresa.trabalhaVinteQuatroHoras ? '24h' : empresa.horaAbertura + ' - ' + empresa.horaEncerramento }}
+      </p>
+    </div>
+
+    <div class="info-bloco">
+      <h3>Endereço</h3>
+      <div class="endereco-tabela">
+        <div><strong>CEP:</strong> {{ empresa.endereco.cep }}</div>
+        <div><strong>Endereço:</strong> {{ empresa.endereco.endereco }}</div>
+        <div><strong>Número:</strong> {{ empresa.endereco.numero }}</div>
+        <div><strong>Complemento:</strong> {{ empresa.endereco.complemento }}</div>
+        <div><strong>Bairro:</strong> {{ empresa.endereco.bairro }}</div>
+        <div><strong>Cidade:</strong> {{ empresa.endereco.cidade }}</div>
+        <div><strong>Estado:</strong> {{ empresa.endereco.estado }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empresa-botoes">
+    <button (click)="irParaServicos()">Serviços</button>
+    <button (click)="irParaProdutos()">Produtos</button>
+    <button (click)="irParaCompras()">Compras</button>
+    <button (click)="irParaAgendamentos()">Agendamentos</button>
+  </div>
+</div>

@@ -65,6 +65,13 @@ public class EmpresaController {
         return empresaService.getById(empresaId);
     }
 
+    @Operation(summary = "Empresa byEmpregado", description = "Este endpoint serve para retornar uma empresa pelo empregado logado.")
+    @GetMapping("/empregado")
+    public EmpresaShortRes getByEmpregado(@AuthenticationPrincipal Jwt jwt) throws CustomException {
+        log.info(" >>> Tentando retornar retornar uma empresa pelo empregado logado.");
+        return empresaService.getByEmpregado(jwt);
+    }
+
     @Operation(summary = "Clinicas", description = "Este endpoint serve para retornar empresas (CLINICA, CLINICA_E_PET_SHOP).")
     @GetMapping("/clinicas")
     public List<EmpresaShortRes> clinicas() throws CustomException {

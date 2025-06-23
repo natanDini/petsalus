@@ -1,0 +1,48 @@
+<div class="compras-container">
+  <h2>Compras Realizadas</h2>
+
+  <div class="compra-card" *ngFor="let compra of compras">
+    <!-- foto do comprador -->
+    <img class="avatar" [src]="compra.fotoComprador || 'assets/images/perfil-sem-foto-fake.png'"
+      alt="Foto do comprador" />
+
+    <!-- dados do comprador -->
+    <div class="compra-info">
+      <h3>{{ compra.comprador }}</h3>
+      <p><strong>CPF:</strong> {{ compra.cpfComprador }}</p>
+      <p><strong>Total:</strong> {{ compra.valorTotal }}</p>
+      <p><strong>Data:</strong> {{ compra.dataHora }}</p>
+      <p><strong>Retirar na loja:</strong> {{ compra.retirarNaLoja ? 'Sim' : 'Não' }}</p>
+    </div>
+
+    <!-- endereço -->
+    <div class="compra-endereco">
+      <h4>Endereço</h4>
+      <p><strong>CEP:</strong> {{ compra.endereco?.cep }}</p>
+      <p><strong>Endereço:</strong> {{ compra.endereco?.endereco }}</p>
+      <p><strong>Número:</strong> {{ compra.endereco?.numero }}</p>
+      <p *ngIf="compra.endereco?.complemento"><strong>Complemento:</strong> {{ compra.endereco?.complemento }}</p>
+      <p><strong>Bairro:</strong> {{ compra.endereco?.bairro }}</p>
+      <p><strong>Cidade:</strong> {{ compra.endereco?.cidade }}</p>
+      <p><strong>Estado:</strong> {{ compra.endereco?.estado }}</p>
+    </div>
+
+    <!-- botão de expandir -->
+    <div class="compra-acoes">
+      <button (click)="toggleProdutos(compra.id)">⋮</button>
+    </div>
+
+    <!-- lista de produtos -->
+    <div class="produtos-lista" *ngIf="compraExpandida[compra.id]">
+      <div class="produto-item" *ngFor="let p of compra.produtos">
+        <img [src]="p.fotoProduto || 'assets/images/produtos-pet-generic.png'" alt="Produto" />
+        <div>
+          <p><strong>{{ p.nomeProduto }}</strong></p>
+          <p>Quantidade: {{ p.qtd }}</p>
+          <p>Valor unitário: {{ p.valorProduto }}</p>
+          <p>Total: {{ p.valorTotalProduto }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
