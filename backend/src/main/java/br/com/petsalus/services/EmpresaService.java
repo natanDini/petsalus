@@ -13,6 +13,7 @@ import br.com.petsalus.exceptions.BadRequestException;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.mappers.EmpresaResMapper;
 import br.com.petsalus.mappers.EmpresaShortResMapper;
+import br.com.petsalus.repositories.EmpresaEmpregadoRepository;
 import br.com.petsalus.repositories.EmpresaRepository;
 import br.com.petsalus.utils.EmpresaUtils;
 import br.com.petsalus.utils.EmptyUtils;
@@ -40,6 +41,7 @@ public class EmpresaService {
     private final EnderecoService enderecoService;
 
     private final EmpresaRepository empresaRepository;
+    private final EmpresaEmpregadoRepository empresaEmpregadoRepository;
 
     public ResponseEntity<Retorno> registrar(EmpresaAdd empresaAdd, Jwt jwt) throws CustomException {
 
@@ -108,6 +110,16 @@ public class EmpresaService {
 
         log.info(" >>> Retornando empresa com sucesso.");
         return EmpresaResMapper.map(empresa);
+    }
+
+    public EmpresaShortRes getByEmpregado(Jwt jwt) throws CustomException {
+
+        User empregado = userUtils.findByJwt(jwt);
+
+        Empresa empresa = empresaEmpregadoRepository.findEmpresaByEmpregado(empregado);
+
+        log.info(" >>> Retornando empresa de empregado com sucesso.");
+        return EmpresaShortResMapper.map(empresa);
     }
 
     public List<EmpresaShortRes> clinicas() throws CustomException {

@@ -11,6 +11,15 @@ import { EmpresaEmpregadosComponent } from './pages/dono/empresa-empregados/empr
 import { EmpresaProdutosComponent } from './pages/dono/empresa-produtos/empresa-produtos.component';
 import { EmpresaComprasComponent } from './pages/dono/empresa-compras/empresa-compras.component';
 import { EmpresaServicosComponent } from './pages/dono/empresa-servicos/empresa-servicos.component';
+import { EmpresaColaboradorComponent } from './pages/colaborador/empresa-colaborador/empresa-colaborador.component';
+import { ColaboradorProdutosComponent } from './pages/colaborador/colaborador-produtos/colaborador-produtos.component';
+import { ColaboradorComprasComponent } from './pages/colaborador/colaborador-compras/colaborador-compras.component';
+import { ColaboradorServicosComponent } from './pages/colaborador/colaborador-servicos/colaborador-servicos.component';
+import { ColaboradorAgendamentosComponent } from './pages/colaborador/colaborador-agendamentos/colaborador-agendamentos.component';
+import { EmpresaVeterinarioComponent } from './pages/veterinario/empresa-veterinario/empresa-veterinario.component';
+import { VeterinarioServicosComponent } from './pages/veterinario/veterinario-servicos/veterinario-servicos.component';
+import { VeterinarioAgendamentosComponent } from './pages/veterinario/veterinario-agendamentos/veterinario-agendamentos.component';
+import { VeterinarioRegistrosComponent } from './pages/veterinario/veterinario-registros/veterinario-registros.component';
 
 export const routes: Routes = [
 
@@ -32,7 +41,16 @@ export const routes: Routes = [
 
   // VETERINARIO
   { path: 'veterinario', component: VeterinarioHomeComponent },
+  { path: 'veterinario/empresa/:id', component: EmpresaVeterinarioComponent },
+  { path: 'veterinario/empresa/servicos/:id', component: VeterinarioServicosComponent },
+  { path: 'veterinario/empresa/agendamentos/:id', component: VeterinarioAgendamentosComponent },
+  { path: 'veterinario/empresa/registros/:id', component: VeterinarioRegistrosComponent },
 
   // COLABORADOR 
-  { path: 'colaborador', component: ColaboradorHomeComponent }
+  { path: 'colaborador', component: ColaboradorHomeComponent },
+  { path: 'colaborador/empresa/:id', component: EmpresaColaboradorComponent },
+  { path: 'colaborador/empresa/produtos/:id', component: ColaboradorProdutosComponent },
+  { path: 'colaborador/empresa/compras/:id', component: ColaboradorComprasComponent },
+  { path: 'colaborador/empresa/servicos/:id', component: ColaboradorServicosComponent },
+  { path: 'colaborador/empresa/agendamentos/:id', component: ColaboradorAgendamentosComponent },
 ];

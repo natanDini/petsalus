@@ -1,0 +1,57 @@
+<div class="produtos-container">
+  <div class="header-produtos">
+    <h2>Produtos da Empresa</h2>
+    <button (click)="abrirModal()">+ Novo Produto</button>
+  </div>
+
+  <!-- Modal Novo Produto -->
+  <div class="modal-backdrop" *ngIf="modalAberta">
+    <div class="modal">
+      <h3>Novo Produto</h3>
+      <form (ngSubmit)="salvarProduto()">
+        <input [(ngModel)]="novoProduto.nome" name="nome" placeholder="Nome do Produto" required />
+        <input [(ngModel)]="novoProduto.preco" name="preco" type="number" step="0.01" placeholder="Preço" required />
+        <input [(ngModel)]="novoProduto.qtdEstoque" name="qtdEstoque" type="number" placeholder="Quantidade em Estoque"
+          required />
+        <textarea [(ngModel)]="novoProduto.descricao" name="descricao" placeholder="Descrição"></textarea>
+
+        <label>
+          <input type="checkbox" [(ngModel)]="novoProduto.disponivel" name="disponivel" />
+          Disponível
+        </label>
+
+        <div class="modal-buttons">
+          <button type="submit">Salvar</button>
+          <button type="button" (click)="modalAberta = false">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="produto-card" *ngFor="let p of produtos">
+    <img [src]="p.fotoPerfil || 'assets/images/produtos-pet-generic.png'" alt="Foto do produto" />
+
+    <div class="produto-info">
+      <h3>{{ p.nome }}</h3>
+      <p>{{ p.descricao }}</p>
+      <p><strong>Preço:</strong> {{ p.preco }}</p>
+      <p><strong>Estoque:</strong> {{ p.qtdEstoque }}</p>
+      <p><strong>Vendidos:</strong> {{ p.qtdVendida }}</p>
+      <p><strong>Disponível:</strong> {{ p.disponivel ? 'Sim' : 'Não' }}</p>
+    </div>
+
+    <!-- Ações -->
+    <div class="produto-acoes">
+      <button (click)="toggleMenuProduto(p.id)">⋮</button>
+
+      <div class="dropdown" *ngIf="menuProdutoAberto === p.id">
+        <button (click)="uploadFoto(p.id)">Upload Foto</button>
+        <button (click)="addEstoque(p.id)">Adicionar Estoque</button>
+        <button *ngIf="p.disponivel" (click)="indisponibilizar(p.id)">Indisponibilizar</button>
+        <button *ngIf="!p.disponivel" (click)="disponibilizar(p.id)">Disponibilizar</button>
+        <button (click)="abrirEditar(p)">Editar</button>
+        <button (click)="excluirProduto(p.id)">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.dtos.response.ServicoRes;
 import br.com.petsalus.entities.Empresa;
 import br.com.petsalus.entities.Servico;
+import br.com.petsalus.enums.TipoServico;
 import br.com.petsalus.exceptions.CustomException;
 import br.com.petsalus.mappers.ServicoResMapper;
 import br.com.petsalus.repositories.ServicoRepository;
@@ -61,6 +62,18 @@ public class ServicoService {
         emptyUtils.validaListaVazia(servicos, "Nenhum serviço encontrado para essa empresa.");
 
         log.info(" >>> Servicos retornados com sucesso");
+        return ServicoResMapper.map(servicos);
+    }
+
+    public List<ServicoRes> getServicosVeterinariosByEmpresaId(@PathVariable Long empresaId) throws CustomException {
+
+        Empresa empresa = empresaUtils.findById(empresaId);
+
+        List<Servico> servicos = servicoRepository.findByEmpresaAndTipoServicoOrderByNomeAsc(empresa, TipoServico.CLINICO);
+
+        emptyUtils.validaListaVazia(servicos, "Nenhum serviço encontrado para essa empresa.");
+
+        log.info(" >>> Servicos veterinários retornados com sucesso");
         return ServicoResMapper.map(servicos);
     }
 

@@ -1,1 +1,22 @@
-<p>veterinario-home works!</p>
+<div class="container">
+  <h2>Empresa em que você trabalha:</h2>
+
+  <div class="empresa-grid">
+    <div class="empresa-card" *ngFor="let empresa of empresas" (click)="verEmpresa(empresa.id)">
+      <img class="empresa-img" [src]="empresa.fotoPerfil || 'assets/images/pet_shop.jpg'" alt="Logo da empresa" />
+
+      <div class="empresa-info">
+        <div class="empresa-titulo">
+          <h3>{{ empresa.nome }}</h3>
+          <span class="subtitulo">{{ empresa.modeloComercial }}</span>
+        </div>
+
+        <p class="descricao">{{ empresa.descricao }}</p>
+        <p class="horario">
+          <strong>Horário:</strong>
+          {{ empresa.trabalhaVinteQuatroHoras ? '24h' : (empresa.horaAbertura + ' - ' + empresa.horaEncerramento) }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

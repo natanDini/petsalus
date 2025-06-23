@@ -4,6 +4,7 @@ import br.com.petsalus.dtos.response.AgendaEmpregado;
 import br.com.petsalus.dtos.response.Empregado;
 import br.com.petsalus.dtos.response.Retorno;
 import br.com.petsalus.entities.*;
+import br.com.petsalus.enums.ServicoAgendaStatus;
 import br.com.petsalus.enums.TipoServico;
 import br.com.petsalus.enums.UserRole;
 import br.com.petsalus.exceptions.CustomException;
@@ -11,6 +12,7 @@ import br.com.petsalus.mappers.AgendaEmpregadoMapper;
 import br.com.petsalus.mappers.EmpregadoMapper;
 import br.com.petsalus.repositories.EmpresaEmpregadoRepository;
 import br.com.petsalus.repositories.ServicoAgendaEmpregadoRepository;
+import br.com.petsalus.repositories.ServicoAgendaRepository;
 import br.com.petsalus.repositories.ServicoEmpregadoRepository;
 import br.com.petsalus.utils.CustomExceptionUtils;
 import br.com.petsalus.utils.EmpresaUtils;
@@ -39,6 +41,7 @@ public class EmpresaEmpregadoService {
 
     private final RetornoService retornoService;
 
+    private final ServicoAgendaRepository servicoAgendaRepository;
     private final ServicoEmpregadoRepository servicoEmpregadoRepository;
     private final EmpresaEmpregadoRepository empresaEmpregadoRepository;
     private final ServicoAgendaEmpregadoRepository servicoAgendaEmpregadoRepository;
@@ -105,6 +108,14 @@ public class EmpresaEmpregadoService {
         LocalDateTime endOfDay = data.atTime(LocalTime.MAX);
 
         List<ServicoAgenda> agendamentos = servicoAgendaEmpregadoRepository.findAgendamentoByEmpregadoAndData(user, startOfDay, endOfDay);
+
+        for (ServicoAgenda servicoAgenda : agendamentos){
+
+            if (servicoAgenda.getDataHora().isBefore(LocalDateTime.now()) && !servicoAgenda.getStatus().equals(ServicoAgendaStatus.CANCELADO)){
+                servicoAgenda.setStatus(ServicoAgendaStatus.EFETIVADO);
+                servicoAgendaRepository.save(servicoAgenda);
+            }
+        }
 
         log.info(" >>> Retornando lista de agendamentos de empregado com sucesso.");
         return AgendaEmpregadoMapper.map(agendamentos);

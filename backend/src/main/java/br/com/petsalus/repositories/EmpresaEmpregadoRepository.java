@@ -14,6 +14,13 @@ import java.util.List;
 public interface EmpresaEmpregadoRepository extends JpaRepository<EmpresaEmpregado, Long> {
 
     @Query("""
+    SELECT DISTINCT ee.empresa
+    FROM EmpresaEmpregado ee
+    WHERE ee.empregado = :empregado
+    """)
+    Empresa findEmpresaByEmpregado(@Param("empregado") User empregado);
+
+    @Query("""
     SELECT DISTINCT ee.empregado
     FROM EmpresaEmpregado ee
     WHERE ee.empresa = :empresa
