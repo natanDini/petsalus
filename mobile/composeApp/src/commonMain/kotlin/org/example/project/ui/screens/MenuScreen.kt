@@ -231,6 +231,9 @@ fun MenuScreen(navController: NavController) {
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable {
+                              navController.navigate("listarpet")
+                            }
                             .padding(16.dp)
                     )
 

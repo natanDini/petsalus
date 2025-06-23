@@ -13,6 +13,7 @@ import org.example.project.ui.screens.MenuScreen
 import org.example.project.ui.screens.PerfilScreen
 import org.example.project.ui.screens.SplashScreen
 import org.example.project.ui.screens.CadastroScreen
+import org.example.project.ui.screens.PetListScreen
 import org.example.project.ui.screens.PetScreen
 import org.example.project.ui.screens.PetScreen
 
@@ -49,6 +50,9 @@ fun NavigationGraph(navController: NavHostController) {
 
         composable("cadastropet"){
             PetScreen(navController = navController)
+        }
+        composable("listarpet"){
+            PetListScreen(navController = navController)
         }
 
         // Outras telas, exemplo:
